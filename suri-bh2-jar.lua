@@ -25,15 +25,35 @@ function match(args)
             f = z:open(w.filename);
             t = f:read("*all")
             f:close()
--- Look for URL obfuscation string
+--- Blackhole URL obfuscation string
             fnd = string.find(t,"EpgKF3twh",1,true) 
             if fnd then
-                rtn = 1
+               rtn = 1
+               break
             end
--- Look for Zelix obfuscator version string
+--- Zelix obfuscator version string as used in Blackhole
             fnd = string.find(t,"ZKM5.4.3",1,true) 
             if fnd then
-                rtn = 1
+               rtn = 1
+               break
+            end
+--- g01pack URL obfuscation string
+            fnd = string.find(t,"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/.:_-?&=%#;",1,true)
+            if fnd then
+               rtn = 1
+               break
+            end
+--- Nuclear URL obfuscation string
+            fnd = string.find(t,"DEvuYp",1,true)
+            if fnd then
+               rtn = 1
+               break
+            end
+--- Base64-encoded class file
+            fnd = string.find(t,"yv66v",1,true)
+            if fnd then
+               rtn = 1
+               break
             end
         end
         z:close()
