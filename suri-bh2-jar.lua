@@ -81,6 +81,12 @@ function match(args)
                rtn = 1
                break
             end
+--- GlassFish classes used in CVE-2012-5076 exploit
+            fnd = string.find(t,"glassfish/gmbal",1,true)
+            if fnd then
+               rtn = 1
+               break
+            end
         end
         z:close()
     end
