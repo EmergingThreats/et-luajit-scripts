@@ -43,6 +43,7 @@ susp_class = {
               {"DEvuYp",1,true,"Nuclear obfuscation string"},
               {"yv66v",1,true,"Base-64-encoded class file"},
               {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file"},
+              {"jmx/mbeanserver",1,true,"jmx/mbeanserver Java 0-day exploit class file"},
               {"SunToolkit", "getField","forName","setSecurityManager","execute",5,true,"CVE-2012-4681 Metasploit and others"},
               {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others"},
               {"f428e4e8",1,true,"Blackhole obfuscated class file"},
