@@ -34,22 +34,24 @@ Will Metcalf
 --]]
 
 require("zip")
-
 -- {strings to match, number of matching strings needed, simple strings, description}
 susp_class = {
-              {"EpgKF3twh",1,true,"Blackhole URL obfuscation string"},
-              {"ZKM5.4.3",1,true,"Blackhole Zelix obfuscator string"},
-              {"/.:_-?&=%#;",1,true,"g01pack obfuscation string"},
-              {"DEvuYp",1,true,"Nuclear obfuscation string"},
-              {"yv66v",1,true,"Base-64-encoded class file"},
-              {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file"},
-              {"jmx/mbeanserver",1,true,"jmx/mbeanserver Java 0-day exploit class file"},
-              {"SunToolkit", "getField","forName","setSecurityManager","execute",5,true,"CVE-2012-4681 Metasploit and others"},
-              {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others"},
-              {"f428e4e8",1,true,"Blackhole obfuscated class file"},
-              {"CAFEBABE",1,true,"Hex-encoded class file"},
-              {"hqicJqJc",1,true,"SofosFO encoded class file"},
-              {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit"}
+              {"EpgKF3twh",1,true,"Blackhole URL obfuscation string",0},
+              {"ZKM5.4.3",1,true,"Blackhole Zelix obfuscator string",0},
+              {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
+              {"DEvuYp",1,true,"Nuclear obfuscation string",0},
+              {"yv66v",1,true,"Base-64-encoded class file",0},
+              {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file",0},
+              {"jmx/mbeanserver",1,true,"jmx/mbeanserver Java 0-day exploit class file",0},
+              {'glassfish/external/statistics/impl',1,true,"CVE-2012-5076 2 exploit class file",0},
+              {'sun.org.mozilla.javascript.internal.Context','sun.org.mozilla.javascript.internal.GeneratedClassLoader',2,true,"Mozilla JS Class Creation Used in Various Exploits",0},
+              {"SunToolkit", "getField","forName","setSecurityManager","execute",5,true,"CVE-2012-4681 Metasploit and others",0},
+              {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others",0},
+              {"f428e4e8",1,true,"Blackhole obfuscated class file",0},
+              {"CAFEBABE",1,true,"Hex-encoded class file",0},
+              {"hqicJqJc",1,true,"SofosFO encoded class file",0},
+              {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
+              {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0}
              }
 
 function init (args)
@@ -61,24 +63,31 @@ end
 function match_strings(a,match_set,verbose)
     local rtn = 0
     local n,m
-    local num_strings = #match_set - 3
+    local num_strings = #match_set - 4 
     
     local match_num = match_set[num_strings+1]
     local plain = match_set[num_strings+2]
     local desc = match_set[num_strings+3]
-    local cnt=0
     local fnd
     
     for n = 1, num_strings, 1 do
         m = match_set[n]
-        fnd = string.find(a,m,1,plain)
-        if fnd then
-            cnt = cnt + 1
-            if cnt == match_num then
-                if verbose == 1 then print("Found " .. desc) end
-                rtn = 1
-                break
-            end
+        if m ~= 0 then
+            fnd = string.find(a,m,1,plain)
+            if fnd then
+                match_set[num_strings+4] = match_set[num_strings+4] + 1
+                if verbose == 1 then print("Found String " .. m .. " " .. match_set[num_strings+4] .. " of " .. match_num) end
+                --match_set[num_strings+4] is our counter
+                if match_set[num_strings+4] == match_num then
+                    if verbose == 1 then print("Found " .. desc) end
+                    match_set[n] = 0
+                    rtn = 1
+                    break
+                else
+                    --Found lets zero it out so we don't check again
+                    match_set[n] = 0
+                end
+           end
         end
     end
     return rtn
@@ -149,9 +158,8 @@ function common(t,verbose)
             f:close()
             if (verbose==1) then print("Checking " .. w.filename) end
             if string.sub(u,1,4) == "\202\254\186\190" then -- CAFEBABE in decimal
-
                 for l,s in pairs(susp_class) do
-                    if (verbose==1) then print("Looking for " .. s[#s] .. " in ".. w.filename) end
+                    if (verbose==1) then print("Looking for " .. s[#s-1] .. " in ".. w.filename) end
                     if match_strings(u,s,verbose) == 1 then
                         rtn = 1
                         if (verbose == 0) then
@@ -159,7 +167,7 @@ function common(t,verbose)
                         end
                     end
                 end
-
+                
             else 
 
 --- Not a class file - see if it is some form of EXE
