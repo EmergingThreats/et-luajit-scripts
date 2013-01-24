@@ -41,6 +41,7 @@ susp_class = {
               {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
               {"DEvuYp",1,true,"Nuclear obfuscation string",0},
               {"yv66v",1,true,"Base-64-encoded class file",0},
+              {"/upload/install_flash_player.",1,true,"Unknown EK Payload Download",0}
               {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file",0},
               {"jmx/mbeanserver",1,true,"jmx/mbeanserver Java 0-day exploit class file",0},
               {'glassfish/external/statistics/impl',1,true,"CVE-2012-5076 2 exploit class file",0},
