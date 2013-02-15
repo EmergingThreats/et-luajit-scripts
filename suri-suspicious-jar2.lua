@@ -45,12 +45,13 @@ susp_class = {
               {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file",0},
               {"jmx/mbeanserver",1,true,"jmx/mbeanserver Java 0-day exploit class file",0},
               {'glassfish/external/statistics/impl',1,true,"CVE-2012-5076 2 exploit class file",0},
+              {"management/MBeanServer",1,true,"management/MBeanServer Java 0-day exploit class file",0},
               {'sun.org.mozilla.javascript.internal.Context','sun.org.mozilla.javascript.internal.GeneratedClassLoader',2,true,"Mozilla JS Class Creation Used in Various Exploits",0},
               {"SunToolkit", "getField","forName","setSecurityManager","execute",5,true,"CVE-2012-4681 Metasploit and others",0},
               {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others",0},
               {"f428e4e8",1,true,"Blackhole obfuscated class file",0},
               {"CAFEBABE",1,true,"Hex-encoded class file",0},
-              {"hqicJqJc",1,true,"SofosFO encoded class file",0},
+              {"F-Abr-rb",1,true,"Cool EK/SofosFO encoded class file",0},
               {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
               {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0}
              }
@@ -137,6 +138,23 @@ function xor_bin_check (a,verbose)
     return 0
 end
 
+function xor_class_check (a,verbose)
+    if #a < 1024 then
+       return 0
+    end
+    local bit = require("bit")
+    local k = bit.bxor(a:byte(1), 0xca) 
+    if k ~= 0 then
+        if (bit.bxor(a:byte(2), k) == 0xfe) and
+           (bit.bxor(a:byte(3), k) == 0xba) and
+           (bit.bxor(a:byte(4), k) == 0xbe) then
+            if (verbose==1) then print('Found class file XORed with ' .. k) end
+            return 1
+        end
+    end
+    return 0
+end
+
 function common(t,verbose)
 
     rtn = 0
@@ -183,7 +201,16 @@ function common(t,verbose)
                         break
                     end
                 end
--- CAFEBABE XORed with 0x0a in decimal class file used in Styx
+-- CAFEBABE XORed with single byte as found in Styx; can't be XORed with 0 or we wouldn't be here
+                if xor_class_check(u,verbose) == 1 then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Found XORed class file in ' .. w.filename)
+                    else
+                        break
+                    end
+                end
+-- CAFEBABE XORed with 0x0a in class file used in Styx
                 if string.sub(u,1,4) == "\192\244\176\180" then
                     rtn = 1
                     if (verbose==1) then
