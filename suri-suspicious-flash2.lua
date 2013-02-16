@@ -46,7 +46,8 @@ susp_class = {
               {"shellcode",1,true,"shellcode mentioned"},
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
-              {"base64","1dT",2,true,"Base64 encoded Flash file"}
+              {"base64","1dT",2,true,"Base64 encoded Flash file"},
+              {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"}
              }
 
 --[[
@@ -136,11 +137,6 @@ function common(t,o,verbose)
     end
     if rtn == 1 then return 1 end
 
---    if string.find(t,"kern",9,true) == nil then
---        if verbose==1 then print("Not found kern") end
---        return 0
---    end
-
     local offset = 9 
     --get number of bits in the rect
     local rectbits = bit.rshift(string.byte(t,9),3)
@@ -176,20 +172,6 @@ function common(t,o,verbose)
             offset = offset + 4
         end
 
---[[        if tagtype == 82 then
-            DoABC = string.sub(t,offset, offset + shortlen)
-            for l,s in pairs(susp_class_doabc) do
-                if (verbose==1) then print("Looking for " .. s[#s]) end
-                if match_strings(DoABC,s,verbose) == 1 then
-                    rtn = 1
-                    if (verbose == 0) then
-                        break
-                    end
-                end
-            end
-        end
-        if rtn == 1 then return 1 end
---]]
         if tagtype == 91 then
             ttfoffset = offset + 3
             -- Find the end of the font name
@@ -210,6 +192,17 @@ function common(t,o,verbose)
                         if verbose==1 then print("we have a match " .. ntables) end
                         return 1
                     end 
+                end
+            end
+        end
+        --DoABC tag
+        if tagtype == 82 then
+            DoABC = string.sub(t,offset, offset + shortlen)
+            s,e = string.find(DoABC,"RegExp",0,true)
+            if s ~= nil then
+                if string.find(DoABC,"%#[\x20-\x7f]*%(%?[sxXmUJ]*i[sxXmUJ]*%-?[sxXmUJ]*%)[\x20-\x7f]*%(%?[sxXmUJ]*%-[sxXmUJ]*i[sxXmUJ]*%)[\x20-\x7f]*%|%|",s) ~= nil then
+                    if verbose==1 then print("Found CVE-2013-0634") end
+                    return 1
                 end
             end
         end
