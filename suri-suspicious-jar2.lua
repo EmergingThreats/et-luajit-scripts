@@ -228,6 +228,20 @@ function common(t,verbose)
                         break
                     end
                 end
+-- g01pack signed certificate
+                fnd = string.find(u,"CLEARESULT CONSULTING INC",1,true)
+                if fnd then
+                    fnd = string.find(u,"Go Daddy Secure Certification",fnd,true)
+                    if fnd then
+                        fnd = string.find(u,"07969287",fnd,true)
+                        rtn = 1
+                        if (verbose==1) then
+                            print('Found g01pack signing cert in ' .. w.filename)
+                        else
+                            break
+                        end
+                    end
+                end
             end
             if (rtn == 1) and (verbose == 0) then
                 break
