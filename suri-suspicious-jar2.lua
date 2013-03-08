@@ -39,6 +39,7 @@ susp_class = {
               {"EpgKF3twh",1,true,"Blackhole URL obfuscation string",0},
               {"ZKM5.4.3",1,true,"Blackhole Zelix obfuscator string",0},
               {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
+              {"%zI.........................................................................\1%zI.........................................................................\12",1,false,"possible g01pack obfuscation strings",0},
               {"DEvuYp",1,true,"Nuclear obfuscation string",0},
               {"yv66v",1,true,"Base-64-encoded class file",0},
               {"/upload/install_flash_player.",1,true,"Unknown EK Payload Download",0},
@@ -52,6 +53,7 @@ susp_class = {
               {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others",0},
               {"f428e4e8",1,true,"Blackhole obfuscated class file",0},
               {"CAFEBABE",1,true,"Hex-encoded class file",0},
+              {"[Cc].?.?.?[Aa].?.?.?[Ff].?.?.?[Ee].?.?.?[Bb].?.?.?[Aa].?.?.?[Bb].?.?.?[Ee]",1,false,"Hex-encoded class file (possibly obfuscated)",0},
               {"F-Abr-rb",1,true,"Cool EK/SofosFO encoded class file",0},
               {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
               {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0}
@@ -177,7 +179,7 @@ function common(t,verbose)
             u = f:read("*all")
             f:close()
             if (verbose==1) then print("Checking " .. w.filename) end
-            if string.sub(u,1,4) == "\202\254\186\190" then -- CAFEBABE in decimal
+            if (string.sub(u,1,4) == "\202\254\186\190" or string.sub(u,1,2) == "\172\237") then -- CAFEBABE or ACED in decimal
                 for l,s in pairs(susp_class) do
                     if (verbose==1) then print("Looking for " .. s[#s-1] .. " in ".. w.filename) end
                     if match_strings(u,s,verbose) == 1 then
@@ -220,26 +222,22 @@ function common(t,verbose)
                         break
                     end
                 end
+-- Stolen GoDaddy certificate Serial number 2b:73:43:2a:a8:4f:44
+                fnd = string.find(u,"\43\115\67\42\168\79\68",1,true) 
+                if fnd then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Found Stolen GoDaddy CLEARESULT certificate in ' .. w.filename)
+                    else
+                        break
+                    end
+                end
                 if xor_bin_check(u,verbose) == 1 then
                     rtn = 1
                     if (verbose==1) then
                         print('Found possibly XORed PE32 executable in ' .. w.filename) 
                     else
                         break
-                    end
-                end
--- g01pack signed certificate
-                fnd = string.find(u,"CLEARESULT CONSULTING INC",1,true)
-                if fnd then
-                    fnd = string.find(u,"Go Daddy Secure Certification",fnd,true)
-                    if fnd then
-                        fnd = string.find(u,"07969287",fnd,true)
-                        rtn = 1
-                        if (verbose==1) then
-                            print('Found g01pack signing cert in ' .. w.filename)
-                        else
-                            break
-                        end
                     end
                 end
             end

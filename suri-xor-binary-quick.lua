@@ -55,27 +55,29 @@ function common(a,verbose)
     end
 
 -- Usually bytes 0x30 to 0x3b are 0-padding,
--- so may actually contain the Key; decode PE offset and check
+-- so may actually contain the Key; decode PE offset at 0x3c and check
 -- it points to bytes that then decode to PE|00 00|
--- 0x3c = 60 is divided by 1,2,3,4,5,6,10 and 12 so easy to check those size keys
--- size 10 and 12 covers all of these assuming full 12-bytes 0-padded
--- but try smaller ones for safety
+-- 7,8,9,10,11,12 also cover their divisors 1 - 6, but include 4 four safety
 
-    key_lengths = {4,5,6,12}
-
-    for i = 0, 11, 1 do
-      key[i+1] = a:byte(0x30+i+1)
-    end
+    key_lengths = {4,7,8,9,10,11,12}
 
     for n, l in pairs(key_lengths) do
+
         koffset = ((l-(0x30 % l)) % l)
-        pe = bit.bxor(a:byte(0x3c+1), key[1+koffset]) + (256*bit.bxor(a:byte(0x3c+2), key[2+koffset]))
+
+        for i = 0, l-1, 1 do
+           key[i+1] = a:byte(0x30+1+((i+koffset) % l))
+        end
+        
+
+        pe = bit.bxor(a:byte(0x3c+1), key[1+(0x3c % l)]) + (256*bit.bxor(a:byte(0x3c+2), key[1+((0x3c+1) % l)]))
+        if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
         if (pe < 1024) then
             offset = pe % l
-            if (bit.bxor(a:byte(pe+1), key[offset+koffset+1]) == string.byte('P')) and 
-               (bit.bxor(a:byte(pe+2), key[((1+offset+koffset)%l)+1]) == string.byte('E')) and
-               (bit.bxor(a:byte(pe+3), key[((2+offset+koffset)%l)+1]) == 0) and
-               (bit.bxor(a:byte(pe+4), key[((3+offset+koffset)%l)+1]) == 0) then
+            if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
+               (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
+               (bit.bxor(a:byte(pe+3), key[((2+offset)%l)+1]) == 0) and
+               (bit.bxor(a:byte(pe+4), key[((3+offset)%l)+1]) == 0) then
                 if verbose==1 then print("Found " .. l .. "-byte XOR key; PE block at " .. pe) end
                 return 1
             end
@@ -136,6 +138,23 @@ function common(a,verbose)
                 if verbose==1 then print("Found XOR-but-not-zero key " .. k1 .. " - PE block at " .. pe) end
                 return 1
             end
+        end
+    end
+
+-- Check for NicePack reversed/4-byte XORed binary
+    for i = 0, 4, 1 do
+      key[i+1] = a:byte(#a-0x30-i)
+    end
+
+    pe = bit.bxor(a:byte(#a-0x3c), key[1]) + (256*bit.bxor(a:byte(#a-0x3c-1), key[2]))
+    if (pe < 1024) then
+        offset = pe % 4
+        if (bit.bxor(a:byte(#a-pe), key[offset+1]) == string.byte('P')) and 
+           (bit.bxor(a:byte(#a-1-pe), key[((1+offset)%4)+1]) == string.byte('E')) and
+           (bit.bxor(a:byte(#a-2-pe), key[((2+offset)%4)+1]) == 0) and
+           (bit.bxor(a:byte(#a-3-pe), key[((3+offset)%4)+1]) == 0) then
+            if verbose==1 then print("Found 4-byte XOR key for reversed binary; PE block at " .. pe) end
+            return 1
         end
     end
 
