@@ -51,6 +51,7 @@ susp_class = {
               {'sun.org.mozilla.javascript.internal.Context','sun.org.mozilla.javascript.internal.GeneratedClassLoader',2,true,"Mozilla JS Class Creation Used in Various Exploits",0},
               {"SunToolkit", "getField","forName","setSecurityManager","execute",5,true,"CVE-2012-4681 Metasploit and others",0},
               {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others",0},
+              {'java/awt/color/ColorSpace','BufferedImage','StackTrace',3,true,"CVE-2013-1463 exploit",0},
               {"f428e4e8",1,true,"Blackhole obfuscated class file",0},
               {"CAFEBABE",1,true,"Hex-encoded class file",0},
               {"[Cc].?.?.?[Aa].?.?.?[Ff].?.?.?[Ee].?.?.?[Bb].?.?.?[Aa].?.?.?[Bb].?.?.?[Ee]",1,false,"Hex-encoded class file (possibly obfuscated)",0},
