@@ -41,6 +41,7 @@ susp_class = {
               {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
               {"%zI.........................................................................\1%zI.........................................................................\12",1,false,"possible g01pack obfuscation strings",0},
               {"DEvuYp",1,true,"Nuclear obfuscation string",0},
+              {"ic?e3s",1,true,"RedKit obfuscation string",0},
               {"yv66v",1,true,"Base-64-encoded class file",0},
               {"/upload/install_flash_player.",1,true,"Unknown EK Payload Download",0},
               {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file",0},
@@ -51,13 +52,14 @@ susp_class = {
               {'sun.org.mozilla.javascript.internal.Context','sun.org.mozilla.javascript.internal.GeneratedClassLoader',2,true,"Mozilla JS Class Creation Used in Various Exploits",0},
               {"SunToolkit", "getField","forName","setSecurityManager","execute",5,true,"CVE-2012-4681 Metasploit and others",0},
               {"AtomicReferenceArray","ProtectionDomain","AllPermission","defineClass","newInstance",5,true,"BH CVE-2012-0507 Metasploit and Others",0},
-              {'java/awt/color/ColorSpace','BufferedImage','StackTrace',3,true,"CVE-2013-1463 exploit",0},
+              {'java/awt/color/ColorSpace','BufferedImage','StackTrace',3,true,"CVE-2013-1493 exploit",0},
               {"f428e4e8",1,true,"Blackhole obfuscated class file",0},
               {"CAFEBABE",1,true,"Hex-encoded class file",0},
               {"[Cc].?.?.?[Aa].?.?.?[Ff].?.?.?[Ee].?.?.?[Bb].?.?.?[Aa].?.?.?[Bb].?.?.?[Ee]",1,false,"Hex-encoded class file (possibly obfuscated)",0},
               {"F-Abr-rb",1,true,"Cool EK/SofosFO encoded class file",0},
               {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
-              {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0}
+              {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0},
+              {'wnin.frphevgl',1,true,"rot13-encoded class name",0}
              }
 
 function init (args)
@@ -108,7 +110,7 @@ function xor_bin_check (a,verbose)
 
     local pe = a:byte(0x3c+1) + (256*a:byte(0x3c+2))
     local key = {}
-    local i, l, n, key_lengths
+    local i, l, n, key_lengths, offset, koffset, zeroes
 
     if (pe < 1024) then
         if a:byte(pe+1) == string.byte('P') and
@@ -120,25 +122,33 @@ function xor_bin_check (a,verbose)
         end
     end
 
-    for i = 0, 11, 1 do
-      key[i+1] = a:byte(0x30+i+1)
-    end
+    key_lengths = {4,5,6,12,19}
 
-    key_lengths = {4,5,6,12}
     for n, l in pairs(key_lengths) do
-        koffset = ((l-(0x30 % l)) % l)
-        pe = bit.bxor(a:byte(0x3c+1), key[1+koffset]) + (256*bit.bxor(a:byte(0x3c+2), key[2+koffset]))
+        zeroes = 0x30;
+        if (l > 12) then zeroes = 0x28; end
+
+        koffset = ((l-(zeroes % l)) % l)
+
+        for i = 0, l-1, 1 do
+           key[i+1] = a:byte(zeroes+1+((i+koffset) % l))
+        end
+        
+
+        pe = bit.bxor(a:byte(0x3c+1), key[1+(0x3c % l)]) + (256*bit.bxor(a:byte(0x3c+2), key[1+((0x3c+1) % l)]))
+        if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
         if (pe < 1024) then
             offset = pe % l
-            if (bit.bxor(a:byte(pe+1), key[offset+koffset+1]) == string.byte('P')) and
-               (bit.bxor(a:byte(pe+2), key[((1+offset+koffset)%l)+1]) == string.byte('E')) and
-               (bit.bxor(a:byte(pe+3), key[((2+offset+koffset)%l)+1]) == 0) and
-               (bit.bxor(a:byte(pe+4), key[((3+offset+koffset)%l)+1]) == 0) then
-                if (verbose==1) then print('Found ' .. l .. '-byte XORed binary') end
+            if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
+               (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
+               (bit.bxor(a:byte(pe+3), key[((2+offset)%l)+1]) == 0) and
+               (bit.bxor(a:byte(pe+4), key[((3+offset)%l)+1]) == 0) then
+                if verbose==1 then print("Found " .. l .. "-byte XOR key; PE block at " .. pe) end
                 return 1
             end
         end
     end
+
     return 0
 end
 
