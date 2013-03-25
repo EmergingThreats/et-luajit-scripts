@@ -58,7 +58,7 @@ susp_class_doabc = {
 --]]
 
 local lz = require 'zlib'
-local s = require 'struct'
+local struct = require 'struct'
 local bit = require("bit")
 
 
@@ -109,7 +109,7 @@ function common(t,o,verbose)
     --Parse the SWF Header
     local sig = string.sub(t,1, 3)
     local ver = string.byte(t,4)
-    local len = s.unpack("<I4",string.sub(t,5,8))
+    local len = struct.unpack("<I4",string.sub(t,5,8))
 
     --subtract sig,ver,len
     local parsed_len = (len - 8)
@@ -168,7 +168,7 @@ function common(t,o,verbose)
 
         -- is this a long tag format?
         if shortlen == 0x3f then
-            shortlen = s.unpack("<I4",string.sub(t,offset,offset+4))
+            shortlen = struct.unpack("<I4",string.sub(t,offset,offset+4))
             offset = offset + 4
         end
 
@@ -181,13 +181,13 @@ function common(t,o,verbose)
             ktag = string.find(ttf,'kern',12,true)
             if ktag ~= nil then
                 -- Inside TTF we are big endian
-                ktoffset = s.unpack(">I4",string.sub(ttf,ktag + 8, ktag + 11))
+                ktoffset = struct.unpack(">I4",string.sub(ttf,ktag + 8, ktag + 11))
                 if verbose==1 then print("ktoffset, shortlen = " .. ktoffset .. "," .. shortlen) end
                 --make sure this is the type we are looking for
                 if string.sub(ttf,ktoffset + 1, ktoffset + 4) == "\x00\x01\x00\x00" then
                     --print("made it this far")
-                    ntables = s.unpack(">I4",(string.sub(ttf,ktoffset + 5, ktoffset + 8)))
-                    ntables_bad = s.unpack(">I4","\x10\x00\x00\x00") 
+                    ntables = struct.unpack(">I4",(string.sub(ttf,ktoffset + 5, ktoffset + 8)))
+                    ntables_bad = struct.unpack(">I4","\x10\x00\x00\x00") 
                     if ntables >= ntables_bad then
                         if verbose==1 then print("we have a match " .. ntables) end
                         return 1

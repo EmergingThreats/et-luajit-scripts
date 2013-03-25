@@ -52,20 +52,24 @@ function common(a,verbose)
         return 0
     end
 
--- Check for 1-byte XOR with 0 and XOR-key bytes left alone
+-- Check for 1 or 2-byte XOR with 0 and XOR-key bytes left alone
+-- Should also match other key lengths that divide 0x3c and the PE offset (e.g. 4)
     k1 = xor0(a:byte(1), string.byte('M'))
-    if xor0(a:byte(2),k1) == string.byte('Z') then
-        pe = xor0(a:byte(0x3c+1),k1) + (256*xor0(a:byte(0x3c+2),k1))
-        if (pe < 1024) then
-            if xor0(a:byte(pe+1),k1) == string.byte('P') and
-               xor0(a:byte(pe+2),k1) == string.byte('E') and
-               a:byte(pe+3) == 0 and
-               a:byte(pe+4) == 0 then
-                if verbose==1 then print("Found XOR-but-not-zero key " .. k1 .. " - PE block at " .. pe) end
-                return 1
-            end
+    k2 = xor0(a:byte(2), string.byte('Z'))
+
+    pe = xor0(a:byte(0x3c+1),k1) + (256*xor0(a:byte(0x3c+2),k2))
+    if verbose==1 then print("Trying PE header at " .. pe) end
+
+    if (pe < 1024) then
+        if xor0(a:byte(pe+1),k1) == string.byte('P') and
+           xor0(a:byte(pe+2),k2) == string.byte('E') and
+           a:byte(pe+3) == 0 and
+           a:byte(pe+4) == 0 then
+            if verbose==1 then print("Found XOR-but-not-zero key " .. k1 .. "," .. k2 .. " - PE block at " .. pe) end
+            return 1
         end
     end
+
     return 0
 end
 
