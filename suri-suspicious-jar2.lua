@@ -59,7 +59,8 @@ susp_class = {
               {"F-Abr-rb",1,true,"Cool EK/SofosFO encoded class file",0},
               {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
               {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0},
-              {'wnin.frphevgl',1,true,"rot13-encoded class name",0}
+              {'wnin.frphevgl',1,true,"rot13-encoded class name",0},
+              {"reflect/Field","invoke/MethodHandles/lookup","invokeExact","findStaticSetter",4,true,"http://weblog.ikvm.net/PermaLink.aspx?guid=acd2dd6d-1028-4996-95df-efa42ac237f0",0}
              }
 
 function init (args)
@@ -243,6 +244,16 @@ function common(t,verbose)
                         break
                     end
                 end
+-- Registry File
+                if (string.sub(u,1,8) == "REGEDIT4" or string.sub(u,1,8) == "REGEDIT5" or string.sub(u,1,23) == "Windows Registry Editor") then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Registry File Found in ' .. w.filename)
+                    else
+                        break
+                    end
+                end
+-- XORed PE32 Executable
                 if xor_bin_check(u,verbose) == 1 then
                     rtn = 1
                     if (verbose==1) then
