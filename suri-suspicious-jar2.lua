@@ -123,11 +123,12 @@ function xor_bin_check (a,verbose)
         end
     end
 
-    key_lengths = {4,5,6,12,19}
+    key_lengths = {4,5,6,12,17,19,22}
 
     for n, l in pairs(key_lengths) do
         zeroes = 0x30;
         if (l > 12) then zeroes = 0x28; end
+        if (l > 20) then zeroes = 0x20; end
 
         koffset = ((l-(zeroes % l)) % l)
 
