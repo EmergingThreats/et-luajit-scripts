@@ -60,7 +60,7 @@ susp_class = {
               {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
               {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0},
               {'wnin.frphevgl',1,true,"rot13-encoded class name",0},
-              {"reflect/Field","invoke/MethodHandle","invokeExact","findStaticSetter",4,true,"CVE-2013-2423",0}
+              {"reflect/Field","invoke/MethodHandle","invokeExact","findStaticSetter",3,true,"CVE-2013-2423",0}
              }
 
 function init (args)
