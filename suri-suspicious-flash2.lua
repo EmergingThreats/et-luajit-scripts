@@ -46,8 +46,9 @@ susp_class = {
               {"shellcode",1,true,"shellcode mentioned"},
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
-              {"base64","1dT",2,true,"Base64 encoded Flash file"},
-              {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"}
+              {"base64","Q1dT",2,true,"Base64 encoded Flash file"},
+              {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"},
+              {"function(p,a,c,k,e,d)",1,true,"Edwards packer"},
              }
 
 --[[

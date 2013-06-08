@@ -39,9 +39,10 @@ susp_class = {
               {"EpgKF3twh",1,true,"Blackhole URL obfuscation string",0},
               {"ZKM5.4.3",1,true,"Blackhole Zelix obfuscator string",0},
               {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
+              {"zoOloloshit","MyPa@yload@.cla@@ss","getololoByName",1,true,"Metasploit based EK",0},
               {"%zI.........................................................................\1%zI.........................................................................\12",1,false,"possible g01pack obfuscation strings",0},
               {"DEvuYp",1,true,"Nuclear obfuscation string",0},
-              {"ic?e3s",1,true,"RedKit obfuscation string",0},
+              {"9.-=_/:?&",1,true,"RedKit/Sakura obfuscation string",0},
               {"yv66v",1,true,"Base-64-encoded class file",0},
               {"/upload/install_flash_player.",1,true,"Unknown EK Payload Download",0},
               {"glassfish/gmbal",1,true,"glassfish/gmbal CVE-2012-5076 exploit class file",0},
@@ -60,9 +61,13 @@ susp_class = {
               {'fuck','Payload','java.security.AllPermission','AtomicReferenceArray',4,true,"Blackhole Atomic Reference Array exploit",0},
               {'invokeWithArguments','invoke/MethodHandle','invoke/MethodType','forName',4,true,"CVE-2012-5088 exploit class file",0},
               {'wnin.frphevgl',1,true,"rot13-encoded class name",0},
-              {"reflect/Field","invoke/MethodHandle","invokeExact","findStaticSetter",3,true,"CVE-2013-2423",0}
+              {"reflect/Field","invoke/MethodHandle","invokeExact","findStaticSetter",3,true,"CVE-2013-2423",0},
+              {"etSecurityManager",1,true,"[gs]etSecurityManager www.fireeye.com/blog/technical/2013/06/get-set-null-java-security.html",0},
+              {"jdbc:msf:sql://",1,true,"CVE-2013-1488 Metasploit",0}
              }
 
+obfus_strings = {
+}
 function init (args)
     local needs = {}
     needs["http.response_body"] = tostring(true)
