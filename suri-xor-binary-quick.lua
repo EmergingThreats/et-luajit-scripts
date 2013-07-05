@@ -72,7 +72,7 @@ function common(a,verbose)
 
         pe = bit.bxor(a:byte(0x3c+1), key[1+(0x3c % l)]) + (256*bit.bxor(a:byte(0x3c+2), key[1+((0x3c+1) % l)]))
         if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
-        if (pe < 1024) then
+        if (pe < 2048) then
             offset = pe % l
             if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
                (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
@@ -87,7 +87,7 @@ function common(a,verbose)
 -- Check for g01pack/Blackhole 1-byte XOR key
     k = a:byte(1);
     pe = bit.bxor(a:byte(0x3c+2), k) + (256*bit.bxor(a:byte(0x3c+3),k))
-    if (pe < 1024) then
+    if (pe < 2048) then
         if (bit.bxor(a:byte(pe+2), k) == string.byte('P')) and 
            (bit.bxor(a:byte(pe+3), k) == string.byte('E')) and
            (bit.bxor(a:byte(pe+4), k) == 0) and
@@ -108,14 +108,14 @@ function common(a,verbose)
     -- now check for a PE header
         k = (bit.bxor(a:byte(1), string.byte('M'), 0x48) - 170) % 256
         k1 = k
-          for i = 1, 1024, 1 do
+          for i = 1, 2048, 1 do
           k = bit.bxor((k + 170) % 256, 0x48)
           b = b .. string.char(bit.bxor(a:byte(i), k))
         end
 
         pe = b:byte(0x3c+1) + (256*b:byte(0x3c+2))
 
-        if (pe < 1024) then
+        if (pe < 2048) then
             if b:byte(pe+1) == string.byte('P') and
                b:byte(pe+2) == string.byte('E') and
                b:byte(pe+3) == 0 and
@@ -130,7 +130,7 @@ function common(a,verbose)
     k1 = xor0(a:byte(1), string.byte('M'))
     if xor0(a:byte(2),k1) == string.byte('Z') then
         pe = xor0(a:byte(0x3c+1),k1) + (256*xor0(a:byte(0x3c+2),k1))
-        if (pe < 1024) then
+        if (pe < 2048) then
             if xor0(a:byte(pe+1),k1) == string.byte('P') and
                xor0(a:byte(pe+2),k1) == string.byte('E') and
                a:byte(pe+3) == 0 and
@@ -147,7 +147,7 @@ function common(a,verbose)
     end
 
     pe = bit.bxor(a:byte(#a-0x3c), key[1]) + (256*bit.bxor(a:byte(#a-0x3c-1), key[2]))
-    if (pe < 1024) then
+    if (pe < 2048) then
         offset = pe % 4
         if (bit.bxor(a:byte(#a-pe), key[offset+1]) == string.byte('P')) and 
            (bit.bxor(a:byte(#a-1-pe), key[((1+offset)%4)+1]) == string.byte('E')) and

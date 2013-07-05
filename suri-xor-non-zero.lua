@@ -60,7 +60,7 @@ function common(a,verbose)
     pe = xor0(a:byte(0x3c+1),k1) + (256*xor0(a:byte(0x3c+2),k2))
     if verbose==1 then print("Trying PE header at " .. pe) end
 
-    if (pe < 1024) then
+    if (pe < 2048) then
         if xor0(a:byte(pe+1),k1) == string.byte('P') and
            xor0(a:byte(pe+2),k2) == string.byte('E') and
            a:byte(pe+3) == 0 and
