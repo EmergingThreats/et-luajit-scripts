@@ -36,6 +36,8 @@ Will Metcalf
 --]]
 local lz = require 'zlib'
 require 'struct'
+local apr = require 'apr.core'
+
 function init (args)
     local needs = {}
     needs["http.response_body"] = tostring(true)
@@ -43,7 +45,6 @@ function init (args)
 end
 
 function cve_2013_2729(xfa,verbose)
-    if verbose == 1 then print("looking for cve_2013_2729") end
     if string.find(xfa,"<image[^>]*>[%n%s\r]-Qk[A-Za-z0-9%+%/%n%s\r]-AAL/AAAC/wAAAv8AAAL/AAAC/wAAAv8AAAL/AAAC/wAAAv8AAAL/AAAC") ~= nil then
         if verbose == 1 then print("Evil CVE-2013-2729") end
         return 1
@@ -51,6 +52,158 @@ function cve_2013_2729(xfa,verbose)
     return 0
 end
 
+function suspicious_string_search(js,verbose)
+    local ret = 0
+    local fnd = nil
+
+    _,_,fnd  = string.find(js,">(SUkqADggAA[^<]-)<")    
+    if fnd ~= nil then
+        local tiffdata = apr.base64_decode(fnd)
+        if struct.unpack("<I4",string.sub(tiffdata,5,8)) == 0x2038 then
+            if verbose == 1 then
+                print ("likely CVE-2010-0188 PDF")
+                ret = 1
+            else
+                return 1
+            end
+        end
+    end
+    _,_,fnd  = string.find(js,">(TU0AKgAA[^<]-)<")
+    if fnd ~= nil then
+        local tiffdata = apr.base64_decode(fnd)
+        if struct.unpack(">I4",string.sub(tiffdata,5,8)) == 0x2038 then
+            if verbose == 1 then
+                print ("likely CVE-2010-0188 PDF")
+                ret = 1
+            else
+                return 1
+            end
+        end
+    end
+
+    --Evertyhing below this line has quotes and + removed
+    js = string.gsub(js,"[\x22\x27%+]","")
+    fnd = string.find(js,"=%[XA%(%(%d%),0-[A-F0-9]-%),XA%(%(%d%),0-[A-F0-9]-%),XA%(%(%d%),0-[A-F0-9]-%)")
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found Sytx/Cool PDF")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    
+    fnd = string.find(js,"ImageField1.ZZA(321,513613",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found BHEK PDF")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"charCodeAt",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found charCodeAt in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,".replace",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found .replace in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"eval%(",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found eval in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"unescape",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found unescape in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"This Program Cannot Be Run in DOS Mode",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found This Program Cannot Be Run in DOS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"app.setTimeOut",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found app.setTimeOut in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"\x5cu4f4f\x5cu4f4f",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found \x5cu4f4f\x5cu4f4f Spray String in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,"u9090",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found u9090 Spray String in JS")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,".fromCharCode",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found .fromCharCode")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    fnd = string.find(js,".substr%(",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found .substr%(")
+            ret = 1
+        else
+            return 1
+        end
+    end
+--[[    _,_,fnd = string.find(js,"return%([%n\r%s]-[\x22\x27]([a-zA-Z0-9%+]-)[\x22\x27]")
+    if fnd ~= nil and string.len(fnd) > 512 then
+        if verbose == 1 then
+            print("Suspicous: Found return of static hex string longer than 512 chars")
+            ret = 1
+        else
+            return 1
+        end
+    end
+]]--
+    return ret
+end
 -- Replace this. It is actually a really dumb way to deal with >> in stream data 
 function parse_object(obj_data,verbose)
     local stream_data,sstart,send = nil
@@ -71,7 +224,7 @@ function parse_object(obj_data,verbose)
                     end
             end 
             local sstart,send,stream_data = string.find(obj_data,"^(.-)%n?endstream",stream_start+1)
-            if string.find(tag_data,'FlateDecode') ~= nil then
+            if string.find(string.gsub(tag_data, "#(%x%x)", function(h) return string.char(tonumber(h,16)) end),'FlateDecode') ~= nil then
                 stream = lz.inflate()
                 stream_data_final, eof, bytes_in, uncompressed_len = stream(stream_data)
             else
@@ -79,7 +232,7 @@ function parse_object(obj_data,verbose)
             end
         end
     end
-    --[[
+--[[
     if verbose == 1 then
            if tag_data ~= nil then
                print("--obj data--\n" .. tag_data .. "\n--obj data--")
@@ -88,7 +241,7 @@ function parse_object(obj_data,verbose)
                print("--stream data--\n" .. stream_data_final .. "\n--stream data--")
            end
     end
-    ]]--
+]]--
     return {tag_data,stream_data_final}
 end
 
@@ -114,6 +267,14 @@ function common(t,verbose)
                        return 1
                    end
                end
+               tret = suspicious_string_search(tostring(pdf_objects_tbl[k][2]),verbose)
+               if tret == 1 then
+                   if verbose == 1 then
+                       ret = 1
+                   else
+                       return 1
+                   end
+               end
            end
        end
    end
@@ -123,7 +284,8 @@ end
 function match(args)
     local t = tostring(args["http.response_body"])
     local o = args["offset"]
-    return common(t,0)
+    ret=common(t,0)
+    return ret 
 end
 
 function run()

@@ -64,7 +64,8 @@ susp_class = {
               {"reflect/Field","invoke/MethodHandle","invokeExact","findStaticSetter",3,true,"CVE-2013-2423",0},
               {"etSecurityManager",1,true,"[gs]etSecurityManager www.fireeye.com/blog/technical/2013/06/get-set-null-java-security.html",0},
               {"jdbc:msf:sql://",1,true,"CVE-2013-1488 Metasploit",0},
-              {"reganaMytiruceS",1,true,"SecurityManger reversed as seen in unknown EK June 27 2013",0}
+              {"reganaMytiruceS",1,true,"SecurityManger reversed PrivatePack June 27 2013",0},
+              {"tracing/ProviderFactory",1,true,"CVE-2013-2460",0}
              }
 
 obfus_strings = {
