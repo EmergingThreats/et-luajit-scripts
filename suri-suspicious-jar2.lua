@@ -120,7 +120,7 @@ function xor_bin_check (a,verbose)
     local key = {}
     local i, l, n, key_lengths, offset, koffset, zeroes
 
-    if (pe < 1024) then
+    if (pe < 2048) then
         if a:byte(pe+1) == string.byte('P') and
            a:byte(pe+2) == string.byte('E') and
            a:byte(pe+3) == 0 and
@@ -130,7 +130,7 @@ function xor_bin_check (a,verbose)
         end
     end
 
-    key_lengths = {4,5,6,12,17,19,22}
+    key_lengths = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24}
 
     for n, l in pairs(key_lengths) do
         zeroes = 0x30;
@@ -146,7 +146,7 @@ function xor_bin_check (a,verbose)
 
         pe = bit.bxor(a:byte(0x3c+1), key[1+(0x3c % l)]) + (256*bit.bxor(a:byte(0x3c+2), key[1+((0x3c+1) % l)]))
         if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
-        if (pe < 1024) then
+        if (pe < 2048) then
             offset = pe % l
             if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
                (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
