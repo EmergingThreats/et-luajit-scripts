@@ -26,7 +26,8 @@ Detection for suspicious PDF files. Currently only supports /FlateDecode require
 
 #lua-zlib
 https://github.com/brimworks/lua-zlib
-
+#lua-apr
+sudo apt-get install lua-apr lua-apr-dev
 
 This lua script can be run standalone and verbosely on a PDF file with
 echo "run()" | lua -i <script name> <pdf file>
