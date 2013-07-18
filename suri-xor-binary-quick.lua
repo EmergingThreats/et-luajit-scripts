@@ -126,6 +126,47 @@ function common(a,verbose)
         end
     end
 
+-- Check for Blackhole - long int obfuscated binary
+    b = "MZ\144\0" 
+    k = a:byte(1) + bit.lshift(a:byte(2),8) + bit.lshift(a:byte(3),16) + bit.lshift(a:byte(4),24)
+    k2 = k % 2
+    k3 = k % 3
+    for i = 5, 2048, 1 do
+        c = a:byte(i)
+        k = bit.band((k * 0x343fd) + 0x269ec3,0x7fffffff)
+        x = (k % 241) + 15
+        k = bit.band((k * 0x343fd) + 0x269ec3,0x7fffffff)
+        r = (k % 6) + 1
+        if k2 == 0 then
+            c = bit.bor(bit.lshift(c,r),bit.rshift(c,8-r)) % 256
+        else
+            c = bit.bor(bit.rshift(c,r),bit.lshift(c,8-r)) % 256
+        end
+        if k3 == 0 then
+            c = bit.bxor(c,x)
+        elseif k3 == 1 then
+            c = (c - x) % 256
+        else
+            c = (c + x) % 256
+        end
+        -- Quick check that byte 5 -> 0x03
+        if i == 5 and c ~= 3 then break end
+        b = b .. string.char(c)
+    end
+    if #b == 2048 then
+        pe = b:byte(0x3c+1) + (256*b:byte(0x3c+2))
+
+        if (pe < 2048) then
+            if b:byte(pe+1) == string.byte('P') and
+               b:byte(pe+2) == string.byte('E') and
+               b:byte(pe+3) == 0 and
+               b:byte(pe+4) == 0 then
+                if verbose==1 then print("Found Blackhole long int encoding - PE block at " .. pe) end
+                return 1
+            end
+        end
+    end
+
 -- Check for 1-byte XOR with 0 and XOR-key bytes left alone
     k1 = xor0(a:byte(1), string.byte('M'))
     if xor0(a:byte(2),k1) == string.byte('Z') then
