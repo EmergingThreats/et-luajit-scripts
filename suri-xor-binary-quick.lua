@@ -128,7 +128,7 @@ function common(a,verbose)
 
 -- Check for Blackhole - long int obfuscated binary
     b = "MZ\144\0" 
-    k = a:byte(1) + bit.lshift(a:byte(2),8) + bit.lshift(a:byte(3),16) + bit.lshift(a:byte(4),24)
+    k = a:byte(1) + (a:byte(2)*256) + (a:byte(3)*256*256) + (a:byte(4)*256*256*256)
     k2 = k % 2
     k3 = k % 3
     for i = 5, 2048, 1 do
