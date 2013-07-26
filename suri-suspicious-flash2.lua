@@ -49,6 +49,7 @@ susp_class = {
               {"base64","Q1dT",2,true,"Base64 encoded Flash file"},
               {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"},
               {"function(p,a,c,k,e,d)",1,true,"Edwards packer"},
+              {"DirtyData","OYaDood",2,true,"Malvertisng Redirect"},
              }
 
 --[[
