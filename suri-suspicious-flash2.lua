@@ -50,6 +50,9 @@ susp_class = {
               {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"},
               {"function(p,a,c,k,e,d)",1,true,"Edwards packer"},
               {"DirtyData","OYaDood",2,true,"Malvertisng Redirect"},
+              {"getVersion(\x22Java\x22)",1,true,"Malvertising PluginDetect Get Java Version"},
+              {"getVersion(\x22AdobeReader\x22)",1,true,"Malvertising PluginDetect Get Adobe Reader Version"},
+              {"C\x3a\x5cUsers\x5cVlaDis\x5cDocuments\x5cFlashDevelop\x5ccareer\x5csrc",1,true,"Malvertising EK Redirect"},
              }
 
 --[[
