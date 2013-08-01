@@ -34,7 +34,7 @@ Stronger checks for some strings that may yield false positives
     http://www.symantec.com/connect/blogs/elderwood-project-behind-latest-internet-explorer-zero-day-vulnerability
 
 This lua script can be run standalone and verbosely on a Flash file with
-echo "run()" | lua -i <script name> <Flash file>
+echo "run()" | luajit -i <script name> <Flash file>
 
 Will Metcalf
 Chris Wakelin
