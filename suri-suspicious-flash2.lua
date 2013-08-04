@@ -53,6 +53,8 @@ susp_class = {
               {"getVersion(\x22Java\x22)",1,true,"Malvertising PluginDetect Get Java Version"},
               {"getVersion(\x22AdobeReader\x22)",1,true,"Malvertising PluginDetect Get Adobe Reader Version"},
               {"C\x3a\x5cUsers\x5cVlaDis\x5cDocuments\x5cFlashDevelop\x5ccareer\x5csrc",1,true,"Malvertising EK Redirect"},
+              {"9b909c8a929a918bd19c8d9a9e8b9aba939a929a918bd7d896998d9e929ad8d6c4",1,true,"Malvertising xor'd iframe http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
+              {"978b8b8fc5d0d0",1,true,"Malvertising xor'd http:// http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
              }
 
 --[[
