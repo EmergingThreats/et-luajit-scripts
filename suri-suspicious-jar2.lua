@@ -65,7 +65,10 @@ susp_class = {
               {"etSecurityManager",1,true,"[gs]etSecurityManager www.fireeye.com/blog/technical/2013/06/get-set-null-java-security.html",0},
               {"jdbc:msf:sql://",1,true,"CVE-2013-1488 Metasploit",0},
               {"reganaMytiruceS",1,true,"SecurityManger reversed PrivatePack June 27 2013",0},
-              {"tracing/ProviderFactory",1,true,"CVE-2013-2460",0}
+              {"tracing/ProviderFactory",1,true,"CVE-2013-2460",0},
+              {"java/security/ProtectionDomain",1,true,"Generic java/security/ProtectionDomain (Observed in Styx)",0},
+              {"isableSecurity",1,true,"Generic [Dd]isableSecurity (Observed in Styx)",0},
+              {"java/awt/image/","Raster","SampleModel",3,true,"CVE-2013-2465/2471",0}
              }
 
 obfus_strings = {
