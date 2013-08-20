@@ -68,7 +68,9 @@ susp_class = {
               {"tracing/ProviderFactory",1,true,"CVE-2013-2460",0},
               {"java/security/ProtectionDomain",1,true,"Generic java/security/ProtectionDomain (Observed in Styx)",0},
               {"isableSecurity",1,true,"Generic [Dd]isableSecurity (Observed in Styx)",0},
-              {"java/awt/image/","Raster","SampleModel",3,true,"CVE-2013-2465/2471",0}
+              {"java/awt/image","Raster","SampleModel",3,true,"Classes used in awt exploits",0},
+              {"java/awt/image/SinglePixelPacked",1,true,"CVE-2013-2471",0},
+              {"java/awt/image/MultiPixelPacked",1,true,"CVE-2013-2465/2463",0}
              }
 
 obfus_strings = {
