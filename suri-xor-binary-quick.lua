@@ -72,7 +72,7 @@ function common(a,verbose)
 
         pe = bit.bxor(a:byte(0x3c+1), key[1+(0x3c % l)]) + (256*bit.bxor(a:byte(0x3c+2), key[1+((0x3c+1) % l)]))
         if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
-        if (pe < 2048) then
+        if (pe < 4096) then
             offset = pe % l
             if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
                (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
@@ -87,7 +87,7 @@ function common(a,verbose)
 -- Check for g01pack/Blackhole 1-byte XOR key
     k = a:byte(1);
     pe = bit.bxor(a:byte(0x3c+2), k) + (256*bit.bxor(a:byte(0x3c+3),k))
-    if (pe < 2048) then
+    if (pe < 4096) then
         if (bit.bxor(a:byte(pe+2), k) == string.byte('P')) and 
            (bit.bxor(a:byte(pe+3), k) == string.byte('E')) and
            (bit.bxor(a:byte(pe+4), k) == 0) and
@@ -167,11 +167,46 @@ function common(a,verbose)
         end
     end
 
+-- Check for Fiesta - 256-byte seeded XOR
+    n = 0
+    m = 0
+    b = ""
+    k = a:sub(1,256); -- key string
+    for i = 1, 2048, 1 do
+        n = (n + 1) % 256
+        m = (m + k:byte(n+1)) % 256
+        -- swap char n and m in the key string
+        if n < m then
+           k = k:sub(1,n) .. k:sub(m+1,m+1) .. k:sub(n+2,m) .. k:sub(n+1,n+1) .. k:sub(m+2)
+        elseif n > m then
+           k = k:sub(1,m) .. k:sub(n+1,n+1) .. k:sub(m+2,n) .. k:sub(m+1,m+1) .. k:sub(n+2)
+        end
+        c = bit.bxor(a:byte(i+256),k:byte(((k:byte(n+1)+k:byte(m+1)) % 256) + 1))
+        -- Quick check that first two bytes are "MZ"
+        if i == 1 and c ~= string.byte('M') then break end
+        if i == 2 and c ~= string.byte('Z') then break end
+        b = b .. string.char(c)
+    end
+    if #b == 2048 then
+        pe = b:byte(0x3c+1) + (256*b:byte(0x3c+2))
+
+        if (pe < 2048) then
+            if b:byte(pe+1) == string.byte('P') and
+               b:byte(pe+2) == string.byte('E') and
+               b:byte(pe+3) == 0 and
+               b:byte(pe+4) == 0 then
+                if verbose==1 then print("Found Fiesta encryption - PE block at " .. pe) end
+                return 1
+            end
+        end
+    end
+       
+
 -- Check for 1-byte XOR with 0 and XOR-key bytes left alone
     k1 = xor0(a:byte(1), string.byte('M'))
     if xor0(a:byte(2),k1) == string.byte('Z') then
         pe = xor0(a:byte(0x3c+1),k1) + (256*xor0(a:byte(0x3c+2),k1))
-        if (pe < 2048) then
+        if (pe < 4096) then
             if xor0(a:byte(pe+1),k1) == string.byte('P') and
                xor0(a:byte(pe+2),k1) == string.byte('E') and
                a:byte(pe+3) == 0 and
@@ -188,7 +223,7 @@ function common(a,verbose)
     end
 
     pe = bit.bxor(a:byte(#a-0x3c), key[1]) + (256*bit.bxor(a:byte(#a-0x3c-1), key[2]))
-    if (pe < 2048) then
+    if (pe < 4096) then
         offset = pe % 4
         if (bit.bxor(a:byte(#a-pe), key[offset+1]) == string.byte('P')) and 
            (bit.bxor(a:byte(#a-1-pe), key[((1+offset)%4)+1]) == string.byte('E')) and
