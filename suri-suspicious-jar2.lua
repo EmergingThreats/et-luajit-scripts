@@ -70,7 +70,8 @@ susp_class = {
               {"isableSecurity",1,true,"Generic [Dd]isableSecurity (Observed in Styx)",0},
               {"java/awt/image","Raster","SampleModel",3,true,"Classes used in awt exploits",0},
               {"java/awt/image/SinglePixelPacked",1,true,"CVE-2013-2471",0},
-              {"java/awt/image/MultiPixelPacked",1,true,"CVE-2013-2465/2463",0}
+              {"java/awt/image/MultiPixelPacked",1,true,"CVE-2013-2465/2463",0},
+              {"what the fuck for v",1,true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit/",0},
              }
 
 obfus_strings = {

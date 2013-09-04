@@ -55,6 +55,8 @@ susp_class = {
               {"C\x3a\x5cUsers\x5cVlaDis\x5cDocuments\x5cFlashDevelop\x5ccareer\x5csrc",1,true,"Malvertising EK Redirect"},
               {"9b909c8a929a918bd19c8d9a9e8b9aba939a929a918bd7d896998d9e929ad8d6c4",1,true,"Malvertising xor'd iframe http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
               {"978b8b8fc5d0d0",1,true,"Malvertising xor'd http:// http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
+              {"King Lich V",1, true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
+              --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
 --[[
