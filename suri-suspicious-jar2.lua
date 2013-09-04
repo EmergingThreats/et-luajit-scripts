@@ -72,6 +72,7 @@ susp_class = {
               {"java/awt/image/SinglePixelPacked",1,true,"CVE-2013-2471",0},
               {"java/awt/image/MultiPixelPacked",1,true,"CVE-2013-2465/2463",0},
               {"what the fuck for v",1,true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit/",0},
+              {"I\x08mg\x1bY\x0eWv\x01a\x1dPc\x1fI\x0e",1,true,"GonDadEK etSecurityManager with static XOR key http://www.kahusecurity.com/2013/chinese-exploit-pack-updated/",0}
              }
 
 obfus_strings = {
