@@ -259,6 +259,16 @@ function common(t,verbose)
                         break
                     end
                 end
+-- Zupionic Kurz Instruments 
+                fnd = string.find(u,"\x55\x04\x03\x13\x16Kurz Instruments, Inc.",1,true)
+                if fnd then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Likely Stolen Kurz Cert found in ' .. w.filename .. ' http://malwageddon.blogspot.fi/2013/06/zuponcic-is-it-bird-is-it-plane-no-its.html')
+                    else
+                        break
+                    end
+                end
 -- Registry File
                 if (string.sub(u,1,8) == "REGEDIT4" or string.sub(u,1,8) == "REGEDIT5" or string.sub(u,1,23) == "Windows Registry Editor") then
                     rtn = 1
