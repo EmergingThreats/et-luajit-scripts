@@ -52,21 +52,28 @@ function common(a,verbose)
         return 0
     end
 
--- Check for 1 or 2-byte XOR with 0 and XOR-key bytes left alone
--- Should also match other key lengths that divide 0x3c and the PE offset (e.g. 4)
-    k1 = xor0(a:byte(1), string.byte('M'))
-    k2 = xor0(a:byte(2), string.byte('Z'))
+-- Check for XOR with 0 and XOR-key bytes left alone
+-- PE offset is (nearly?) always divisible by 8, so key lengths 1,2,4 will always be detected
+-- Can match other key lengths in some cases where the remainder on dividing into 0x3c is 0,1,2 or 4
+-- and on dividing into the PE offset is 0 or 1 (or 4 when the key length is 5)
+    key = {xor0(a:byte(1), string.byte('M')), xor0(a:byte(2), string.byte('Z')), xor0(a:byte(3), 0x90), 0, xor0(a:byte(5), 0x03), 0, 0, 0}
 
-    pe = xor0(a:byte(0x3c+1),k1) + (256*xor0(a:byte(0x3c+2),k2))
-    if verbose==1 then print("Trying PE header at " .. pe) end
+    key_lengths = {1,3,5,6,7,8}
+    for n,l in pairs(key_lengths) do
+      
+        koffset = 0x3c % l
+        pe = xor0(a:byte(0x3c+1),key[1+koffset]) + (256*xor0(a:byte(0x3c+2),key[((1+koffset) % l) + 1]))
+        if verbose==1 then print("Trying PE header at " .. pe) end
 
-    if (pe < 2048) then
-        if xor0(a:byte(pe+1),k1) == string.byte('P') and
-           xor0(a:byte(pe+2),k2) == string.byte('E') and
-           a:byte(pe+3) == 0 and
-           a:byte(pe+4) == 0 then
-            if verbose==1 then print("Found XOR-but-not-zero key " .. k1 .. "," .. k2 .. " - PE block at " .. pe) end
-            return 1
+        koffset = pe % l
+        if (pe < 4096) then
+            if xor0(a:byte(pe+1),key[1+koffset]) == string.byte('P') and
+               xor0(a:byte(pe+2),key[((1+koffset) % l) + 1]) == string.byte('E') and
+               a:byte(pe+3) == 0 and
+               a:byte(pe+4) == 0 then
+                if verbose==1 then print("Found " .. l .. "-byte XOR-but-not-zero key " .. key[1] .. "," .. key[2] .. " - PE block at " .. pe) end
+                return 1
+            end
         end
     end
 

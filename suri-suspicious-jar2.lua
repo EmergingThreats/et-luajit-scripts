@@ -231,20 +231,20 @@ function common(t,verbose)
                         break
                     end
                 end
+-- CAFEBABE backwards at end of file
+                if string.sub(u,#u-3) == "\190\186\254\202" then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Found reversed class file in ' .. w.filename)
+                    else
+                        break
+                    end
+                end
 -- CAFEBABE XORed with single byte as found in Styx; can't be XORed with 0 or we wouldn't be here
                 if xor_class_check(u,verbose) == 1 then
                     rtn = 1
                     if (verbose==1) then
                         print('Found XORed class file in ' .. w.filename)
-                    else
-                        break
-                    end
-                end
--- CAFEBABE XORed with 0x0a in class file used in Styx
-                if string.sub(u,1,4) == "\192\244\176\180" then
-                    rtn = 1
-                    if (verbose==1) then
-                        print('Found Styx XORed class file in ' .. w.filename)
                     else
                         break
                     end
