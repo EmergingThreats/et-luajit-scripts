@@ -58,6 +58,7 @@ susp_class = {
               {"King Lich V",1, true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
               {"ExploitSwf",1, true,"Angler EK"},
               {"\x01\x00\x00\x00\x00\x00\x74\x60\x64",1,true,"Malvertising XORed Flash file"},
+              {"\x01\x00\x00\x00\x00\x00\x00\x14\x10\x4d",1,true,"Malvertising XORed Flash file #2"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -215,6 +216,14 @@ function common(t,o,verbose)
                     if verbose==1 then print("Found CVE-2013-0634") end
                     return 1
                 end
+            end
+        end
+        if tagtype == 87 then
+            binoffset = offset + 6
+            if verbose==1 then print("DefineBinary tag id " .. ((256*t:byte(offset+1)) + t:byte(offset)) .. " at " .. offset) end
+            if string.sub(t,binoffset,binoffset+2) ~= "CWS" and bit.bxor(t:byte(binoffset),t:byte(binoffset+1)) == 20 and bit.bxor(t:byte(binoffset),t:byte(binoffset+2)) == 16 then
+                if verbose==1 then print("Found XORed Flash header 'CWS' in binary file") end
+                return 1
             end
         end
         offset = offset + shortlen  
