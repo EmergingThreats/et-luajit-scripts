@@ -80,6 +80,16 @@ function init (args)
     return needs
 end
 
+--http://snippets.luacode.org/?p=snippets/String_to_Hex_String_68
+function HexDumpString(str,spacer)
+    return (
+    string.gsub(str,"(.)",
+    function (c)
+        return string.format("%02X%s",string.byte(c), spacer or "\\")
+    end)
+    )
+end
+
 function match_strings(a,match_set,verbose)
     local rtn = 0
     local n,m
@@ -110,22 +120,17 @@ function match_strings(a,match_set,verbose)
 end
 
 function common(t,o,verbose)
-    -- CWS and FWS are both 3 bytes long
     -- Method should work for Flash inside of OLE etc.
 --    local o = args["offset"]
     rtn = 0
-
-    t = string.sub(t,o - 3) 
+    local t = string.sub(t,o - 3) 
     local tlen = string.len(t)
-
     --Parse the SWF Header
     local sig = string.sub(t,1, 3)
     local ver = string.byte(t,4)
     local len = struct.unpack("<I4",string.sub(t,5,8))
-
     --subtract sig,ver,len
     local parsed_len = (len - 8)
-
     -- store uncompressed length
     local uncompressed_len = 0
 
@@ -133,11 +138,12 @@ function common(t,o,verbose)
     if sig  == "CWS" then 
         stream = lz.inflate()
         t, eof, bytes_in, uncompressed_len = stream(string.sub(t,9))
-    elseif sig ~= "FWS" then
+    elseif sig == "FWS" then
+        t=string.sub(t,9)
+    else
         if verbose==1 then print("Not a SWF file bailing" .. sig) end
         return 0
     end
-
     for l,s in pairs(susp_class) do
         if (verbose==1) then print("Looking for " .. s[#s]) end
         if match_strings(t,s,verbose) == 1 then
@@ -147,37 +153,27 @@ function common(t,o,verbose)
             end
         end
     end
-    if rtn == 1 then return 1 end
-
-    local offset = 9 
-    --get number of bits in the rect
-    local rectbits = bit.rshift(string.byte(t,9),3)
-
-    if ((rectbits * 4) % 8) == 0 then
-        more = rectbits * 4 / 8
-    else
-        more = math.floor(rectbits * 4 / 8) + 1
+    if (verbose == 0) then
+        if rtn == 1 then return 1 end
     end
 
-    offset = offset + more + 1
-    offset = offset + 4 
+    --get number of bits in the rect
+    local rectbits = bit.rshift(bit.band(string.byte(t,1),0xff),3)
+    offset = math.floor((7 + (rectbits*4) - 3) / 8) + 5 + 1
 
     --iterate over the tags---
     while offset + 1 < len do
         b = string.byte(t,offset)
         a = string.byte(t,offset + 1)
-
         -- Out of bytes
         if a == nil or b == nil then 
            if verbose==1 then print("out of bytes") end
            return 0
         end
-
         -- get tag bits --
         offset = offset + 2
         tagtype = bit.band(((bit.lshift(a,2)) + (bit.rshift(b,6))),0x03ff)
         shortlen = bit.band(b,0x3f)
-
         -- is this a long tag format?
         if shortlen == 0x3f then
             shortlen = struct.unpack("<I4",string.sub(t,offset,offset+4))
@@ -224,8 +220,17 @@ function common(t,o,verbose)
             if string.sub(t,binoffset,binoffset+2) ~= "CWS" and bit.bxor(t:byte(binoffset),t:byte(binoffset+1)) == 20 and bit.bxor(t:byte(binoffset),t:byte(binoffset+2)) == 16 then
                 if verbose==1 then print("Found XORed Flash header 'CWS' in binary file") end
                 return 1
+            --[[--Maybe in the future we can inspect embeded flash
+            elseif string.sub(t,binoffset,binoffset+2) == "CWS" then
+                common(string.sub(t,offset + 6,offset + shortlen),4,verbose)
+            --]]
             end
         end
+        --[[if verbose == 1 then
+            print("++++++++++++++++++++++++++++++++++++++++++++")
+            print("tagtype:"..tagtype)
+            print(string.sub(t,offset, offset + shortlen))
+        end--]]
         offset = offset + shortlen  
     end
     return 0
