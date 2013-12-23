@@ -59,6 +59,7 @@ susp_class = {
               {"ExploitSwf",1, true,"Angler EK"},
               {"\x01\x00\x00\x00\x00\x00\x74\x60\x64",1,true,"Malvertising XORed Flash file"},
               {"\x01\x00\x00\x00\x00\x00\x00\x14\x10\x4d",1,true,"Malvertising XORed Flash file #2"},
+              {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\x3a\x2f\x2f","location.href",4,true,"ms-help as location href likely spray attempt"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -156,7 +157,7 @@ function common(t,o,verbose)
     if (verbose == 0) then
         if rtn == 1 then return 1 end
     end
-
+    --print(t)
     --get number of bits in the rect
     local rectbits = bit.rshift(bit.band(string.byte(t,1),0xff),3)
     offset = math.floor((7 + (rectbits*4) - 3) / 8) + 5 + 1
