@@ -57,8 +57,9 @@ susp_class = {
               {"978b8b8fc5d0d0",1,true,"Malvertising xor'd http:// http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
               {"King Lich V",1, true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
               {"ExploitSwf",1, true,"Angler EK"},
-              {"\x01\x00\x00\x00\x00\x00\x74\x60\x64",1,true,"Malvertising XORed Flash file"},
-              {"\x01\x00\x00\x00\x00\x00\x00\x14\x10\x4d",1,true,"Malvertising XORed Flash file #2"},
+              {"\x01\x00\x00\x00\x00\x00\xfe\x1f\xca",1,true,"Malvertising XORed Flash file #1"},
+              {"\x01\x00\x00\x00\x00\x00\xce\x5f\xc5",1,true,"Malvertising XORed Flash file #2"},
+              {"\x01\x00\x00\x00\x00\x00\xce\xa2\x6f",1,true,"Malvertising XORed Flash file #3"},
               {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\x3a\x2f\x2f","location.href",4,true,"ms-help as location href likely spray attempt"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
