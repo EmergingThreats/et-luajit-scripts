@@ -46,7 +46,7 @@ function init (args)
 end
 
 function cve_2013_2729(xfa,verbose)
-    if string.find(xfa,"<image[^>]*>[%n%s\r]-Qk[A-Za-z0-9%+%/%n%s\r]-AAL/AAAC/wAAAv8AAAL/AAAC/wAAAv8AAAL/AAAC/wAAAv8AAAL/AAAC") ~= nil then
+    if string.find(xfa,"<image[^>]*>[\n%s\r]-Qk[A-Za-z0-9%+%/\n%s\r]-AAL/AAAC/wAAAv8AAAL/AAAC/wAAAv8AAAL/AAAC/wAAAv8AAAL/AAAC") ~= nil then
         if verbose == 1 then print("Evil CVE-2013-2729") end
         return 1
     end
@@ -81,7 +81,15 @@ function suspicious_string_search(js,verbose)
             end
         end
     end
-
+    fnd = string.find(js,"\x2c\x24\x24\x24\x24\x3a\x28\x21\x5b\x5d\x2b\x22\x22\x29\x5b",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found JJEncoded Script")
+            ret = 1
+        else
+            return 1
+        end
+    end
     --Evertyhing below this line has quotes and + removed
     js = string.gsub(js,"[\x22\x27%+]","")
     fnd = string.find(js,"=%[XA%(%(%d%),0-[A-F0-9]-%),XA%(%(%d%),0-[A-F0-9]-%),XA%(%(%d%),0-[A-F0-9]-%)")
@@ -193,7 +201,51 @@ function suspicious_string_search(js,verbose)
             return 1
         end
     end
---[[    _,_,fnd = string.find(js,"return%([%n\r%s]-[\x22\x27]([a-zA-Z0-9%+]-)[\x22\x27]")
+
+    fnd = string.find(js,"function[\r\n%s]-heapSpray")
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found function heapSpray")
+            ret = 1
+        else
+            return 1
+        end
+    end
+    --CVE-2013-3346
+    if string.find(js,"app.removeToolButton",0,true) ~= nil then
+        function_table = {}
+        add_button_table = {}
+        --iterate over the fuctions
+        for fname,f in string.gmatch(js,"(%w+)[\r\n%s]-=[\r\n%s]-function[\r\n%s]-%([^%)]-%)[\r\n%s]-(%b{})") do
+            function_table[fname]=f
+        end
+        for fname,f in string.gmatch(js,"function[\r\n%s]+(%w+)[\r\n%s]-%([^%)]-%)[\r\n%s]-(%b{})") do
+            function_table[fname]=f
+        end 
+        for i, v in pairs(function_table) do 
+            _,_,remove_button_function = string.find(v,"app.removeToolButton[\r\n%s]-%((%b{})")
+            if remove_button_function ~= nil then
+                _,_,removecname = string.find(remove_button_function,"cName[\r\n%s]-:[\r\n%s]-([^\r\n%s,%}]+)")
+                for add_button in string.gmatch(js,"app.addToolButton[\r\n%s]-%([\r\n%s]-(%b{})") do
+                    if string.find(add_button,"cName[\r\n%s]-:[\r\n%s]-"..removecname) ~= nil then
+                        _,_,enablefunc = string.find(add_button,"cEnable[\r\n%s]-:[\r\n%s]-([^\r\n%s%,%}%(]+)")
+                        if function_table[enablefunc] ~= nil then
+                             fnd = string.find(function_table[enablefunc],"cEnable[\r\n%s]-:[\r\n%s]-"..i)
+                             if fnd ~= nil then
+                                 if verbose == 1 then
+                                     print("Found CVE-2013-3346")
+                                     ret = 1
+                                 else
+                                     return 1
+                                 end
+                             end
+                        end
+                    end
+                end
+            end
+        end
+    end
+--[[    _,_,fnd = string.find(js,"return%([ \r%s]-[\x22\x27]([a-zA-Z0-9%+]-)[\x22\x27]")
     if fnd ~= nil and string.len(fnd) > 512 then
         if verbose == 1 then
             print("Suspicous: Found return of static hex string longer than 512 chars")
@@ -211,11 +263,12 @@ function parse_object(obj_data,verbose)
     local stream_data_final = nil
     local dict_start,dict_end,tag_data = string.find(obj_data,"<<(.*)>>")
     if tag_data ~= nil then
-        if string.find(tag_data,">>[\r%n%s%%]*stream[%s\r%n]*") ~= nil then
-            _,_,tag_data = string.find(obj_data,"^(.*)>>[\r%n%s%%]*stream[%s\r%n]*",dict_start+2)
+        if string.find(tag_data,">>[\r\n%s%%]*stream[%s\r\n]*") ~= nil then
+            _,_,tag_data = string.find(obj_data,"^(.*)>>[\r\n%s%%]*stream[%s\r\n]*",dict_start+2)
             dict_end = dict_start + string.len(tag_data) + 3 
         end
-        _,stream_start = string.find(obj_data,"^[\r%n%s%%]*stream[%s\r%n]*",dict_end+1)
+        _,stream_start = string.find(obj_data,"^[\r\n%s%%]*stream[%s\r\n]*",dict_end+1)
+        tag_data=(AsciiHexDecodePound(tag_data))        
         if stream_start ~= nil then
             if string.find(tag_data,'FlateDecode') ~= nil and string.find(tag_data,'ObjStm') ~= nil then
                     _,_,offset = string.find(tag_data,'First%s*(%d+)')
@@ -224,10 +277,19 @@ function parse_object(obj_data,verbose)
                         stream_start = stream_start + offset
                     end
             end 
-            local sstart,send,stream_data = string.find(obj_data,"^(.-)%n?endstream",stream_start+1)
-            if string.find(string.gsub(tag_data, "#(%x%x)", function(h) return string.char(tonumber(h,16)) end),'FlateDecode') ~= nil then
-                stream = lz.inflate()
-                stream_data_final, eof, bytes_in, uncompressed_len = stream(stream_data)
+            local sstart,send,stream_data = string.find(obj_data,"^(.-)\n?endstream",stream_start+1)
+
+            --this is a pretty dumb way to deal with this we should parse all Filters and process them in an ordered list but since we only support 2 right now.... 
+            if string.find(tag_data,'\x2fFilter[\r\n%s]-\x2fFlateDecode') ~= nil or string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fFlateDecode[\r\n%s]-]') ~= nil then
+                stream_data_final = FlateDecode(stream(stream_data))
+            elseif string.find(tag_data,'\x2fFilter[\r\n%s]-\x2fASCIIHexDecode') ~= nil or string.find(tag_data,'\x2fFilter[\r\n%s]-%[?[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-%]?') ~= nil then
+                stream_data_final = AsciiHexDecode(stream_data)
+            elseif string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-\x2fFlateDecode[\r\n%s]-%]') ~= nil then
+                stream_data = AsciiHexDecode(stream_data)
+                stream_data_final = FlateDecode(stream_data)
+            elseif string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fFlateDecode[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-%]') ~= nil then
+                stream_data = FlateDecode(stream_data)
+                stream_data_final = AsciiHexDecode(stream_data)
             else
                 stream_data_final = stream_data
             end
@@ -240,6 +302,7 @@ function parse_object(obj_data,verbose)
            end
            if stream_data_final ~= nil then
                print("--stream data--\n" .. stream_data_final .. "\n--stream data--")
+               print(stream_data_final)
            end
     end
 ]]--
@@ -247,9 +310,26 @@ function parse_object(obj_data,verbose)
 end
 
 function populate_objects_table(pdf,pdf_objects_tbl,verbose)
-    for obj_num,obj_data in string.gfind(pdf,"%n?(%d+%s+%d+)%s+obj%s*(.-)%s*%n?endobj") do
+    for obj_num,obj_data in string.gfind(pdf,"\n?(%d+%s+%d+)%s+obj%s*(.-)%s*\n?endobj") do
          pdf_objects_tbl[obj_num]=parse_object(obj_data,verbose)
     end          
+end
+
+function AsciiHexDecode(t)
+  t = string.gsub(t,"%s","")
+  local decoded = string.gsub(t,"(%x%x)", function(h) return string.char(tonumber(h,16)) end)
+  return decoded
+end
+
+function FlateDecode(t)
+    local stream = lz.inflate()
+    stream_data_final, eof, bytes_in, uncompressed_len = stream(t)
+    return stream_data_final
+end
+
+function AsciiHexDecodePound(t)
+  local decoded = string.gsub(t,"#(%x%x)",function(h) return string.char(tonumber(h,16)) end)
+  return decoded
 end
 
 function common(t,verbose)
