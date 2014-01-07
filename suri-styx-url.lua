@@ -26,6 +26,8 @@
 This lua script can be run standalone and verbosely on a URI
 echo "run()" | lua -i <script name> <URI>
 
+It's based on research at http://malwarebiopsy.blogspot.co.uk/2013/06/styx-exploit-kit-pattern-emerges.html
+
 Chris Wakelin
 --]]
 
