@@ -38,6 +38,7 @@ require("zip")
 susp_class = {
               {"EpgKF3twh",1,true,"Blackhole URL obfuscation string",0},
               {"ZKM5.4.3",1,true,"Blackhole Zelix obfuscator string",0},
+              {"ZKM%d\x2e%d\x2e%dE",1,false,"Zelix obfuscator Eval Version",0},
               {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
               {"zoOloloshit","MyPa@yload@.cla@@ss","getololoByName",1,true,"Metasploit based EK",0},
               {"%zI.........................................................................\1%zI.........................................................................\12",1,false,"possible g01pack obfuscation strings",0},
@@ -73,7 +74,9 @@ susp_class = {
               {"java/awt/image/MultiPixelPacked",1,true,"CVE-2013-2465/2463",0},
               {"what the fuck for v",1,true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit/",0},
               {"I\x08mg\x1bY\x0eWv\x01a\x1dPc\x1fI\x0e",1,true,"GonDadEK etSecurityManager with static XOR key http://www.kahusecurity.com/2013/chinese-exploit-pack-updated/",0},
-              {"javafx/application/Preloader","javafx/stage/Stage","javafx/application/Application",3,true,"Java7u21 Click2play Bypass http://seclists.org/bugtraq/2013/Jul/41 ???",0} 
+              {"javafx/application/Preloader","javafx/stage/Stage","javafx/application/Application",3,true,"Java7u21 Click2play Bypass http://seclists.org/bugtraq/2013/Jul/41 ???",0}, 
+              {"[cC][Mm][dD]\x2e[Ee][Xx][Ee]%s/[Cc]",1,false,"cmd.exe /c as seen in IceFog/SplinterRat",0},
+              {"\x5c[Ss][Oo][Ff][Tt][Ww][Aa][Rr][Ee]\x5c[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\x5c[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\x5c[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\x5c[Rr][Uu][Nn]",1,false,"Access to windows Run key",0},
              }
 
 obfus_strings = {
@@ -156,12 +159,14 @@ function xor_bin_check (a,verbose)
         if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
         if (pe < 4096) then
             offset = pe % l
-            if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
-               (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
-               (bit.bxor(a:byte(pe+3), key[((2+offset)%l)+1]) == 0) and
-               (bit.bxor(a:byte(pe+4), key[((3+offset)%l)+1]) == 0) then
-                if verbose==1 then print("Found " .. l .. "-byte XOR key; PE block at " .. pe) end
-                return 1
+            if a:byte(pe+4) ~= nil and key[((3+offset)%l)+1] ~= nil then
+                if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and 
+                   (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
+                   (bit.bxor(a:byte(pe+3), key[((2+offset)%l)+1]) == 0) and
+                   (bit.bxor(a:byte(pe+4), key[((3+offset)%l)+1]) == 0) then
+                   if verbose==1 then print("Found " .. l .. "-byte XOR key; PE block at " .. pe) end
+                     return 1
+                end
             end
         end
     end
@@ -291,6 +296,28 @@ function common(t,verbose)
                         break
                     end
                 end
+
+-- Bitcoin Self Signed Leading to CyberGate 
+                fnd = string.find(u,"\x55\x04\x03\x13\x0dJames Patrick",1,true)
+                if fnd then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Found BitCoin to CyberGate Cert James Patrick' .. w.filename)
+                    else
+                        break
+                    end
+                end
+-- Icefog Cert
+                fnd = string.find(u,"\x55\x1d\x11\x04\x19\x30\x17\x81\x15admin@warmestsoft.net",1,true)
+                if fnd then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Found IceFog COMODO Cert' .. w.filename)
+                    else
+                        break
+                    end
+                end
+
 -- Registry File
                 if (string.sub(u,1,8) == "REGEDIT4" or string.sub(u,1,8) == "REGEDIT5" or string.sub(u,1,23) == "Windows Registry Editor") then
                     rtn = 1
