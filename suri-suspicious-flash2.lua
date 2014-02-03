@@ -61,7 +61,9 @@ susp_class = {
               {"\x01\x00\x00\x00\x00\x00\xce\x5f\xc5",1,true,"Malvertising XORed Flash file #2"},
               {"\x01\x00\x00\x00\x00\x00\xce\xa2\x6f",1,true,"Malvertising XORed Flash file #3"},
               {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\x3a\x2f\x2f","location.href",4,true,"ms-help as location href likely spray attempt"},
-              {"BITCH_SEARCH_RADIUS_DWORDS",1,true,"e-how/livestrong malicious SWF file"}
+              {"BITCH_SEARCH_RADIUS_DWORDS",1,true,"e-how/livestrong malicious SWF file"},
+              {"createIframe(","getCookie(","createCookie(","window.navigator.userAgent.toString",4,true,"SWF CookieBomb"},
+              {"Protected by secureSWF<br/>Demo version.",1,true,"secureSWF Demo Version Used in ehow/livestrong attacks"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
