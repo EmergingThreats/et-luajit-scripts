@@ -62,8 +62,9 @@ susp_class = {
               {"\x01\x00\x00\x00\x00\x00\xce\xa2\x6f",1,true,"Malvertising XORed Flash file #3"},
               {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\x3a\x2f\x2f","location.href",4,true,"ms-help as location href likely spray attempt"},
               {"BITCH_SEARCH_RADIUS_DWORDS",1,true,"e-how/livestrong malicious SWF file"},
-              {"createIframe(","getCookie(","createCookie(","window.navigator.userAgent.toString",4,true,"SWF CookieBomb"},
-              {"Protected by secureSWF<br/>Demo version.",1,true,"secureSWF Demo Version Used in ehow/livestrong attacks"}
+              {"createIframe(","getCookie(","createCookie(","navigator.userAgent.toString",4,true,"SWF CookieBomb"},
+              {"Protected by secureSWF<br/>Demo version.",1,true,"secureSWF Demo Version Used in ehow/livestrong attacks"},
+              {"cookie_al_new","externalXML","navigator.userAgent.toString","externalXML",4,true,"SWF CookieBomb 2"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -77,7 +78,8 @@ susp_class_doabc = {
 local lz = require 'zlib'
 local struct = require 'struct'
 local bit = require("bit")
-
+local max_nesting_cnt = 0
+local max_nesting_limit = 1
 
 function init (args)
     local needs = {}
@@ -93,6 +95,60 @@ function HexDumpString(str,spacer)
         return string.format("%02X%s",string.byte(c), spacer or "\\")
     end)
     )
+end
+
+function xor_bin_check (a,verbose)
+    if #a < 1024 then
+       return 0
+    end
+
+    local bit = require("bit")
+
+    local pe = a:byte(0x3c+1) + (256*a:byte(0x3c+2))
+    local key = {}
+    local i, l, n, key_lengths, offset, koffset, zeroes
+
+    if (pe < 4096) then
+        if a:byte(pe+1) == string.byte('P') and
+           a:byte(pe+2) == string.byte('E') and
+           a:byte(pe+3) == 0 and
+           a:byte(pe+4) == 0 then
+            if (verbose==1) then print('Found PE32 executable') end
+            return 0
+        end
+    end
+
+    key_lengths = {4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24}
+
+    for n, l in pairs(key_lengths) do
+        zeroes = 0x30;
+        if (l > 12) then zeroes = 0x28; end
+        if (l > 20) then zeroes = 0x20; end
+
+        koffset = ((l-(zeroes % l)) % l)
+
+        for i = 0, l-1, 1 do
+           key[i+1] = a:byte(zeroes+1+((i+koffset) % l))
+        end
+
+
+        pe = bit.bxor(a:byte(0x3c+1), key[1+(0x3c % l)]) + (256*bit.bxor(a:byte(0x3c+2), key[1+((0x3c+1) % l)]))
+        if verbose==1 then print("Trying " .. l .. "-byte XOR key; PE block at " .. pe) end
+        if (pe < 4096) then
+            offset = pe % l
+            if a:byte(pe+4) ~= nil and key[((3+offset)%l)+1] ~= nil then
+                if (bit.bxor(a:byte(pe+1), key[offset+1]) == string.byte('P')) and
+                   (bit.bxor(a:byte(pe+2), key[((1+offset)%l)+1]) == string.byte('E')) and
+                   (bit.bxor(a:byte(pe+3), key[((2+offset)%l)+1]) == 0) and
+                   (bit.bxor(a:byte(pe+4), key[((3+offset)%l)+1]) == 0) then
+                   if verbose==1 then print("Found " .. l .. "-byte XOR key; PE block at " .. pe) end
+                     return 1
+                end
+            end
+        end
+    end
+
+    return 0
 end
 
 function match_strings(a,match_set,verbose)
@@ -225,11 +281,25 @@ function common(t,o,verbose)
             if string.sub(t,binoffset,binoffset+2) ~= "CWS" and bit.bxor(t:byte(binoffset),t:byte(binoffset+1)) == 20 and bit.bxor(t:byte(binoffset),t:byte(binoffset+2)) == 16 then
                 if verbose==1 then print("Found XORed Flash header 'CWS' in binary file") end
                 return 1
-            --[[--Maybe in the future we can inspect embeded flash
-            elseif string.sub(t,binoffset,binoffset+2) == "CWS" then
-                common(string.sub(t,offset + 6,offset + shortlen),4,verbose)
-            --]]
             end
+            -- Look for Embedded XOR bins
+            if xor_bin_check(string.sub(t,offset + 6,offset + shortlen),verbose) == 1 then
+                return 1
+            end
+            -- Inspect Embeded Flash to a certian point. If nesting is to deep fire an event
+            if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" then
+                if max_nesting_cnt < max_nesting_limit then
+                    if common(string.sub(t,offset + 6,offset + shortlen),4,verbose) == 1 then
+                        if verbose==1 then print("Found Evil in Embedded Flash File") end
+                        return 1
+                    else
+                        max_nesting_cnt = max_nesting_cnt + 1
+                    end
+                else
+                    if verbose==1 then print("We passed a Maximum Flash Nesting Count Limit of " .. max_nesting_limit) end
+                    return 1
+                end
+            end 
         end
         --[[if verbose == 1 then
             print("++++++++++++++++++++++++++++++++++++++++++++")
