@@ -295,9 +295,9 @@ function common(t,o,verbose)
                     else
                         max_nesting_cnt = max_nesting_cnt + 1
                     end
-                else
+                --[[else
                     if verbose==1 then print("We passed a Maximum Flash Nesting Count Limit of " .. max_nesting_limit) end
-                    return 1
+                    return 1]]--
                 end
             end 
         end
