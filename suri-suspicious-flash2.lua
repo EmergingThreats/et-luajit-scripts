@@ -26,7 +26,10 @@ Stronger checks for some strings that may yield false positives
 
     #lua-zlib
     https://github.com/brimworks/lua-zlib
-   
+
+    #ltn12ce to build on Ubuntu-12.04 I had to "cmake .. -DBUILD_ZLIB=Off"
+    https://github.com/mkottman/ltn12ce
+       
     ###Technical Description of the CVE-2012-1535 Vuln
     http://www.exploit-db.com/wp-content/themes/exploit/docs/21928.pdf
 
@@ -64,7 +67,8 @@ susp_class = {
               {"BITCH_SEARCH_RADIUS_DWORDS",1,true,"e-how/livestrong malicious SWF file"},
               {"createIframe(","getCookie(","createCookie(","navigator.userAgent.toString",4,true,"SWF CookieBomb"},
               {"Protected by secureSWF<br/>Demo version.",1,true,"secureSWF Demo Version Used in ehow/livestrong attacks"},
-              {"cookie_al_new","externalXML","navigator.userAgent.toString","externalXML",4,true,"SWF CookieBomb 2"}
+              {"cookie_al_new","externalXML","navigator.userAgent.toString","externalXML",4,true,"SWF CookieBomb 2"},
+              {"cmd.exe /c","attacker_class_bin",2,true,"SWT Exploit"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -81,10 +85,40 @@ local bit = require("bit")
 local max_nesting_cnt = 0
 local max_nesting_limit = 1
 
+local core = require "ltn12ce.core"
+
+io.stdout:setvbuf'no'
+
+assert(core.lzma, 'no lzma ltn12ce.core')
+
+assert(not pcall(core.lzma), 'expecting error')
+
 function init (args)
     local needs = {}
     needs["http.response_body"] = tostring(true)
     return needs
+end
+
+function lzma_d(cdata)
+    local append = table.insert
+    local d = assert(core.lzma('decompress'), 'failed to start decompression')
+
+    local decompressed = {}
+
+    for i = 1, #cdata do
+        arg = cdata:sub(i,i)
+        local ret,p = pcall(function()return d:update(arg)end)
+        if ret then
+            append(decompressed, p)
+        end
+    end
+    local ret,f = pcall(function()d:finish()end)
+    if ret then
+        append(decompressed, f)
+    end
+    decompressed = table.concat(decompressed)
+    --print('Decompressed:', #decompressed)
+    return decompressed
 end
 
 --http://snippets.luacode.org/?p=snippets/String_to_Hex_String_68
@@ -199,6 +233,12 @@ function common(t,o,verbose)
     if sig  == "CWS" then 
         stream = lz.inflate()
         t, eof, bytes_in, uncompressed_len = stream(string.sub(t,9))
+    elseif sig == "ZWS" then
+        lzma = t:sub(13,17)
+        lzma = lzma .. struct.pack("<I8",parsed_len)
+        c_data = t:sub(18)
+        lzma = lzma .. c_data
+        t=lzma_d(lzma)
     elseif sig == "FWS" then
         t=string.sub(t,9)
     else
@@ -217,7 +257,6 @@ function common(t,o,verbose)
     if (verbose == 0) then
         if rtn == 1 then return 1 end
     end
-    --print(t)
     --get number of bits in the rect
     local rectbits = bit.rshift(bit.band(string.byte(t,1),0xff),3)
     offset = math.floor((7 + (rectbits*4) - 3) / 8) + 5 + 1
