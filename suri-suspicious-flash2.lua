@@ -68,7 +68,10 @@ susp_class = {
               {"createIframe(","getCookie(","createCookie(","navigator.userAgent.toString",4,true,"SWF CookieBomb"},
               {"Protected by secureSWF<br/>Demo version.",1,true,"secureSWF Demo Version Used in ehow/livestrong attacks"},
               {"cookie_al_new","externalXML","navigator.userAgent.toString","externalXML",4,true,"SWF CookieBomb 2"},
-              {"cmd.exe /c","attacker_class_bin",2,true,"SWT Exploit"},
+              {"rop_gadget","DoExploit","attacker_class_bin",1,true,"SWT/GrandSoft Exploit"},
+              {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
+              {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
+              {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -308,8 +311,9 @@ function common(t,o,verbose)
             DoABC = string.sub(t,offset, offset + shortlen)
             s,e = string.find(DoABC,"RegExp",0,true)
             if s ~= nil then
-                if string.find(DoABC,"%#[\x20-\x7f]*%(%?[sxXmUJ]*i[sxXmUJ]*%-?[sxXmUJ]*%)[\x20-\x7f]*%(%?[sxXmUJ]*%-[sxXmUJ]*i[sxXmUJ]*%)[\x20-\x7f]*%|%|",s) ~= nil then
-                    if verbose==1 then print("Found CVE-2013-0634") end
+                _,_,capture =string.find(DoABC,"(%#[\x20-\x7f]*%(%?[sxXmUJ]*i[sxXmUJ]*%-?[sxXmUJ]*%)[\x20-\x7f]*%(%?[sxXmUJ]*%-[sxXmUJ]*i[sxXmUJ]*%)[\x20-\x7f]*%|%|)",s)
+                if capture ~= nil then
+                    if verbose==1 then print("Found CVE-2013-0634 " .. capture) end
                     return 1
                 end
             end
