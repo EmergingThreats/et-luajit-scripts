@@ -71,7 +71,8 @@ susp_class = {
               {"rop_gadget","DoExploit","attacker_class_bin",1,true,"SWT/GrandSoft Exploit"},
               {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
-              {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"}
+              {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
+              {"Vector","\x1d\x01\x01\x05OZZDLG[DCM[GE[@AZ\x16\x14\x19\x16DDD[\x10\x0d\x10uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\x01\x02",2,true,"VFW ASLR Bypass"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -107,20 +108,27 @@ function lzma_d(cdata)
     local d = assert(core.lzma('decompress'), 'failed to start decompression')
 
     local decompressed = {}
-
-    for i = 1, #cdata do
+    --[[for i = 1, #cdata do
         arg = cdata:sub(i,i)
         local ret,p = pcall(function()return d:update(arg)end)
         if ret then
             append(decompressed, p)
         end
     end
+    ]]--
+    string.gsub(cdata,"(.)",
+    function (c)
+        local ret,p = pcall(function()return d:update(c)end)
+        if ret then
+            append(decompressed, p)
+        end
+    end)
     local ret,f = pcall(function()d:finish()end)
     if ret then
         append(decompressed, f)
     end
+
     decompressed = table.concat(decompressed)
-    --print('Decompressed:', #decompressed)
     return decompressed
 end
 
@@ -248,6 +256,7 @@ function common(t,o,verbose)
         if verbose==1 then print("Not a SWF file bailing" .. sig) end
         return 0
     end
+    --print(t)
     for l,s in pairs(susp_class) do
         if (verbose==1) then print("Looking for " .. s[#s]) end
         if match_strings(t,s,verbose) == 1 then
