@@ -244,7 +244,22 @@ function suspicious_string_search(js,verbose)
                 end
             end
         end
+        local cexec = nil
+        local button_name = nil
+        for add_button in string.gmatch(js,"app.addToolButton[\r\n%s]-%([\r\n%s]-(%b{})") do
+           print(add_button)
+            _,_,cname = string.find(add_button,"cName[\r\n%s]-:[\r\n%s]-([^\r\n%s%,%}%(]+)")
+            if cname ~= nil and string.find(add_button,"cExec[\r\n%s]-:.-app.removeToolButton[\r\n%s]-%("..cname.."[\r\n%s]-%)") ~= nil then
+                if verbose == 1 then
+                    print("Found CVE-2013-3346")
+                    ret = 1
+                else
+                    return 1
+                end
+            end
+         end
     end
+    
 --[[    _,_,fnd = string.find(js,"return%([ \r%s]-[\x22\x27]([a-zA-Z0-9%+]-)[\x22\x27]")
     if fnd ~= nil and string.len(fnd) > 512 then
         if verbose == 1 then
@@ -281,7 +296,7 @@ function parse_object(obj_data,verbose)
 
             --this is a pretty dumb way to deal with this we should parse all Filters and process them in an ordered list but since we only support 2 right now.... 
             if string.find(tag_data,'\x2fFilter[\r\n%s]-\x2fFlateDecode') ~= nil or string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fFlateDecode[\r\n%s]-]') ~= nil then
-                stream_data_final = FlateDecode(stream(stream_data))
+                stream_data_final = FlateDecode(stream_data)
             elseif string.find(tag_data,'\x2fFilter[\r\n%s]-\x2fASCIIHexDecode') ~= nil or string.find(tag_data,'\x2fFilter[\r\n%s]-%[?[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-%]?') ~= nil then
                 stream_data_final = AsciiHexDecode(stream_data)
             elseif string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-\x2fFlateDecode[\r\n%s]-%]') ~= nil then
