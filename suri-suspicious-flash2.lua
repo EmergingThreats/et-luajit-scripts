@@ -64,6 +64,7 @@ susp_class = {
               {"\x01\x00\x00\x00\x00\x00\xce\x5f\xc5",1,true,"Malvertising XORed Flash file #2"},
               {"\x01\x00\x00\x00\x00\x00\xce\xa2\x6f",1,true,"Malvertising XORed Flash file #3"},
               {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\x3a\x2f\x2f","location.href",4,true,"ms-help as location href likely spray attempt"},
+              {"JavaWebStart.isInstalled.1.6.0.0","JavaWebStart.isInstalled.1.7.0.0",1,true,"Possible ASLR Bypass JavaWebStart"},
               {"BITCH_SEARCH_RADIUS_DWORDS",1,true,"e-how/livestrong malicious SWF file"},
               {"createIframe(","getCookie(","createCookie(","navigator.userAgent.toString",4,true,"SWF CookieBomb"},
               {"Protected by secureSWF<br/>Demo version.",1,true,"secureSWF Demo Version Used in ehow/livestrong attacks"},
@@ -73,6 +74,7 @@ susp_class = {
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
               {"Vector","\x1d\x01\x01\x05OZZDLG[DCM[GE[@AZ\x16\x14\x19\x16DDD[\x10\x0d\x10uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\x01\x02",2,true,"VFW ASLR Bypass"},
+              {"C:\x5cUsers\x5c007\x5cDesktop\x5cFlashExp(ie)\x5csrc",1,true,"Flash 0-day Feb 19 2014 007 Debug String"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -92,9 +94,7 @@ local max_nesting_limit = 1
 local core = require "ltn12ce.core"
 
 io.stdout:setvbuf'no'
-
 assert(core.lzma, 'no lzma ltn12ce.core')
-
 assert(not pcall(core.lzma), 'expecting error')
 
 function init (args)
@@ -108,14 +108,6 @@ function lzma_d(cdata)
     local d = assert(core.lzma('decompress'), 'failed to start decompression')
 
     local decompressed = {}
-    --[[for i = 1, #cdata do
-        arg = cdata:sub(i,i)
-        local ret,p = pcall(function()return d:update(arg)end)
-        if ret then
-            append(decompressed, p)
-        end
-    end
-    ]]--
     string.gsub(cdata,"(.)",
     function (c)
         local ret,p = pcall(function()return d:update(c)end)
