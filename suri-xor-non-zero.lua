@@ -66,7 +66,7 @@ function common(a,verbose)
         if verbose==1 then print("Trying PE header at " .. pe) end
 
         koffset = pe % l
-        if (pe < 4096) then
+        if ((pe < 4096) and (pe < #a-4)) then
             if xor0(a:byte(pe+1),key[1+koffset]) == string.byte('P') and
                xor0(a:byte(pe+2),key[((1+koffset) % l) + 1]) == string.byte('E') and
                a:byte(pe+3) == 0 and
