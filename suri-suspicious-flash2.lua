@@ -75,7 +75,9 @@ susp_class = {
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
               {"Vector","\x1d\x01\x01\x05OZZDLG[DCM[GE[@AZ\x16\x14\x19\x16DDD[\x10\x0d\x10uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\x01\x02",2,true,"VFW ASLR Bypass"},
               {"C:\x5cUsers\x5c007\x5cDesktop\x5cFlashExp(ie)\x5csrc",1,true,"Flash 0-day Feb 19 2014 007 Debug String"},
-              {"createRandomPassword","allowLoadBytesCodeExecution","%]%.replace%(%/.-%/g,[^%)]-%)%.replace%(%/.-%/g,[^%)]-%)%}eval%(",3,false,"Malvertising With Plugin-Detect"}
+              {"createRandomPassword","allowLoadBytesCodeExecution","%]%.replace%(%/.-%/g,[^%)]-%)%.replace%(%/.-%/g,[^%)]-%)%}eval%(",3,false,"Malvertising With Plugin-Detect"},
+              {"RegExp","||||||||||||||||||||","(?i)()()(?-i)",3,true,"NuclearEK"},
+              {"DoExploit","scan_for_rop_gadgets","make_vtable_rop_and_shellcode",1,true,"NuclearEK"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
