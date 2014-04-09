@@ -78,6 +78,7 @@ susp_class = {
               {"createRandomPassword","allowLoadBytesCodeExecution","%]%.replace%(%/.-%/g,[^%)]-%)%.replace%(%/.-%/g,[^%)]-%)%}eval%(",3,false,"Malvertising With Plugin-Detect"},
               {"RegExp","||||||||||||||||||||","(?i)()()(?-i)",3,true,"NuclearEK"},
               {"DoExploit","scan_for_rop_gadgets","make_vtable_rop_and_shellcode",1,true,"NuclearEK"},
+              {"y5ncGlra25lcw","vial",2,true,"Goon/Fiesta"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
