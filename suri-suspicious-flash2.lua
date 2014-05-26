@@ -326,7 +326,21 @@ function common(t,o,verbose)
         end
         if tagtype == 87 then
             binoffset = offset + 6
+            local bindata = string.sub(t,offset + 6,offset + shortlen)
             if verbose==1 then print("DefineBinary tag id " .. ((256*t:byte(offset+1)) + t:byte(offset)) .. " at " .. offset) end
+            s,e = string.find(bindata,"Crystallize",0,true)
+            if s ~= nil then
+                local cs,ce =string.find(bindata,"\xA2\x07\x64\x65\x66\x61\x75\x6C\x74\x56\x61\x6C\x75\x65\x00")
+                if ce ~= nil then
+                    local m2 = string.sub(bindata,ce+5,ce+8)
+                    sfloat = struct.unpack("<I4",m2)
+                    if sfloat > 2000000000 then
+                        if verbose==1 then print("Found CVE-2014-0515 Exploit") end
+                        return 1
+                    end
+                end
+            end
+            
             if string.sub(t,binoffset,binoffset+2) ~= "CWS" and bit.bxor(t:byte(binoffset),t:byte(binoffset+1)) == 20 and bit.bxor(t:byte(binoffset),t:byte(binoffset+2)) == 16 then
                 if verbose==1 then print("Found XORed Flash header 'CWS' in binary file") end
                 return 1
