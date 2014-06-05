@@ -296,7 +296,16 @@ function common(t,verbose)
                         break
                     end
                 end
-
+-- Zupionic Queens University 
+                fnd = string.find(u,"\x55\x04\x03..Queen\x27s University")
+                if fnd then
+                    rtn = 1
+                    if (verbose==1) then
+                        print('Likely Stolen Queens University Cert found in ' .. w.filename .. ' http://malwageddon.blogspot.fi/2013/06/zuponcic-is-it-bird-is-it-plane-no-its.html')
+                    else
+                        break
+                    end
+                end
 -- Bitcoin Self Signed Leading to CyberGate 
                 fnd = string.find(u,"\x55\x04\x03\x13\x0dJames Patrick",1,true)
                 if fnd then
