@@ -81,6 +81,7 @@ susp_class = {
               {"y5ncGlra25lcw","vial",2,true,"Goon/Fiesta"},
               {"Tope","Pidj7gbU",2,true,"DeputyDog"},
               {"naidnEelttil","reverse",2,true,"CottonCastle"},
+              {"avm2.intrinsics.memory","domainMemory","Capabilities","11,0,1,152","ByteArray","littleEndian",6,true,"Possible CVE-2014-0497"}, 
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -254,7 +255,7 @@ function common(t,o,verbose)
         if verbose==1 then print("Not a SWF file bailing" .. sig) end
         return 0
     end
-    print(t)
+    --print(t)
     for l,s in pairs(susp_class) do
         if (verbose==1) then print("Looking for " .. s[#s]) end
         if match_strings(t,s,verbose) == 1 then
@@ -329,8 +330,7 @@ function common(t,o,verbose)
             binoffset = offset + 6
             local bindata = string.sub(t,offset + 6,offset + shortlen)
             if verbose==1 then print("DefineBinary tag id " .. ((256*t:byte(offset+1)) + t:byte(offset)) .. " at " .. offset) end
-            s,e = string.find(bindata,"Crystallize",0,true)
-            if s ~= nil then
+            if string.find(bindata,"defaultValue",0,true) ~= nil and string.find(bindata,"maxValue",0,true) ~= nil and string.find(bindata,"minValue",0,true) ~= nil then
                 local cs,ce =string.find(bindata,"\xA2\x07\x64\x65\x66\x61\x75\x6C\x74\x56\x61\x6C\x75\x65\x00")
                 if ce ~= nil then
                     local m2 = string.sub(bindata,ce+5,ce+8)
