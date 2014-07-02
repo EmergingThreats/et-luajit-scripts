@@ -242,6 +242,19 @@ function common(a,verbose)
         end
     end
 
+-- Check for Magnitude subtract single byte - 4th byte is usually "0"
+    k = a:byte(4);
+    pe = ((a:byte(0x3c+1) - k) % 256) + (256*((a:byte(0x3c+2)-k) % 256))
+    if ((pe < 4096) and (pe < #a-5)) then
+        if ((a:byte(pe+1) - k) % 256 == string.byte('P')) and 
+           ((a:byte(pe+2) - k) % 256 == string.byte('E')) and
+           ((a:byte(pe+3) - k) % 256 == 0) and
+           ((a:byte(pe+4) - k) % 256 == 0) then
+            if verbose==1 then print("Found Magnitude 1-byte subtract key " .. k .. " - PE block at " .. pe) end
+            return 1
+        end
+    end
+
     return 0
 end
 
