@@ -315,6 +315,18 @@ function common(t,o,verbose)
                 end
             end
         end
+        if tagtype == 20 or tagtype == 36 then
+            local imgid = struct.unpack("<I2",string.sub(t,offset, offset + 1))
+            local format = struct.unpack("<I1",string.sub(t,offset + 2,offset + 2))
+            local width = struct.unpack("<I2",string.sub(t,offset + 3, offset + 4))
+            local height = struct.unpack("<I2",string.sub(t,offset + 5, offset + 6))
+            local color_table_cnt = struct.unpack("<I1",string.sub(t,offset + 7,offset + 7)) + 1
+
+            if format == 0 or format == 1 or format == 2 then
+                if verbose==1 then print("Found DefineLossless with Unsupported imgformat" .. format) end
+                    return 1
+            end
+        end
         --DoABC tag
         if tagtype == 82 then
             DoABC = string.sub(t,offset, offset + shortlen)
@@ -351,6 +363,19 @@ function common(t,o,verbose)
             if xor_bin_check(string.sub(t,offset + 6,offset + shortlen),verbose) == 1 then
                 return 1
             end
+            if string.find(bindata,"doswf",0,true) ~= nil then
+                block_size = string.sub(bindata,1,1)
+	        key = string.sub(bindata,2,2)
+	        offset = struct.unpack("<I4",string.sub(bindata,3,6))
+	        length = struct.unpack("<I4",string.sub(bindata,6,9))
+                print(HexDumpString(block_size))
+                print(HexDumpString(key))
+                print(offset)
+                print(length)
+
+                --print(HexDumpString(bindata))
+            end
+                
             -- Inspect Embeded Flash to a certian point. If nesting is to deep fire an event
             if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" then
                 if max_nesting_cnt < max_nesting_limit then
