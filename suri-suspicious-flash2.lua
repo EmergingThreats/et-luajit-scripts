@@ -77,6 +77,7 @@ susp_class = {
               {"C:\x5cUsers\x5c007\x5cDesktop\x5cFlashExp(ie)\x5csrc",1,true,"Flash 0-day Feb 19 2014 007 Debug String"},
               {"createRandomPassword","allowLoadBytesCodeExecution","%]%.replace%(%/.-%/g,[^%)]-%)%.replace%(%/.-%/g,[^%)]-%)%}eval%(",3,false,"Malvertising With Plugin-Detect"},
               {"RegExp","||||||||||||||||||||","(?i)()()(?-i)",3,true,"NuclearEK"},
+              {"RegExp","\x28\x3f\x2d\x4a\x29\x28\x3f\x2d\x69\x29","||||||||||||||||||||","\x29\x28\x3f\x2d\x69\x29",3,true,"Flash Exploit"},
               {"RegExp","\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d",2,true,"Flash Exploit"},
               {"DoExploit","scan_for_rop_gadgets","make_vtable_rop_and_shellcode",1,true,"NuclearEK"},
               {"y5ncGlra25lcw","vial",2,true,"Goon/Fiesta"},
