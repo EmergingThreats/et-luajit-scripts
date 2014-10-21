@@ -84,9 +84,11 @@ susp_class = {
               {"RegExp","\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d",2,true,"Flash Exploit"},
               {"DoExploit","scan_for_rop_gadgets","make_vtable_rop_and_shellcode",1,true,"NuclearEK"},
               {"y5ncGlra25lcw","vial",2,true,"Goon/Fiesta"},
+              {"bb4v45nywriteUns","soonug","ibvctm3tloadB","g4f53addEven",1,true,"FiestaEK"},
               {"Tope","Pidj7gbU",2,true,"DeputyDog"},
               {"naidnEelttil","reverse",2,true,"CottonCastle"},
-              {"avm2.intrinsics.memory","domainMemory","Capabilities","11,0,1,152","ByteArray","littleEndian",6,true,"Possible CVE-2014-0497"}, 
+              {"avm2.intrinsics.memory","domainMemory","Capabilities","11,0,1,152","ByteArray","littleEndian",6,true,"Possible CVE-2014-0497"},
+              {"avm2.intrinsics.memory","currentDomain","atomicCompareAndSwapLength","casi32","ByteArray",5,true,"Possible CVE-2014-0569"},  
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
