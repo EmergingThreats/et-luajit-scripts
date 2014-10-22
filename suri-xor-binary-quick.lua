@@ -255,6 +255,27 @@ function common(a,verbose)
         end
     end
 
+-- Check for Upatre LZNT1-compressed + 4-byte incrementing XORed binary
+
+    key[1] = bit.bxor(a:byte(9),string.byte('Z'))
+    key[2] = bit.bxor(a:byte(10),0x90)
+    key[3] = a:byte(7)
+    key[4] = bit.bxor(a:byte(8),string.byte('M'))
+    k = key[1]+(256*key[2])+(256*256*key[3])+(256*256*256*key[4])
+    if k > 0 then
+        b = ""
+        for i = 9,20,4 do
+          k1 = bit.bxor(k,a:byte(i)+(256*a:byte(i+1))+(256*256*a:byte(i+2))+(256*256*256*a:byte(i+3)))
+          b = b .. string.char(k1 % 256) .. string.char(bit.rshift(k1,8) % 256) .. string.char(bit.rshift(k1,16) % 256) .. string.char(bit.rshift(k1,24) % 256)
+          k = k+1
+        end
+        if b == "Z\144\0\003\0\0\0\130\004\0\048\255" then
+            if verbose==1 then print("Found Upatre 4-byte XOR key for LZNT1-compressed binary") end
+            return 1
+        end
+    end
+
+
     return 0
 end
 
