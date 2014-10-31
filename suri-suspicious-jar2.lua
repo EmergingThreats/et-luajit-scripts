@@ -38,7 +38,7 @@ require("zip")
 susp_class = {
               {"EpgKF3twh",1,true,"Blackhole URL obfuscation string",0},
               {"ZKM5.4.3",1,true,"Blackhole Zelix obfuscator string",0},
-              {"ZKM%d\x2e%d\x2e%dE",1,false,"Zelix obfuscator Eval Version",0},
+              {"ZKM%d\046%d\046%dE",1,false,"Zelix obfuscator Eval Version",0},
               {"/.:_-?&=%#;",1,true,"g01pack obfuscation string",0},
               {"zoOloloshit","MyPa@yload@.cla@@ss","getololoByName",1,true,"Metasploit based EK",0},
               {"%zI.........................................................................\1%zI.........................................................................\12",1,false,"possible g01pack obfuscation strings",0},
@@ -73,10 +73,10 @@ susp_class = {
               {"java/awt/image/SinglePixelPacked",1,true,"CVE-2013-2471/2472/2473",0},
               {"java/awt/image/MultiPixelPacked",1,true,"CVE-2013-2465/2463",0},
               {"what the fuck for v",1,true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit/",0},
-              {"I\x08mg\x1bY\x0eWv\x01a\x1dPc\x1fI\x0e",1,true,"GonDadEK etSecurityManager with static XOR key http://www.kahusecurity.com/2013/chinese-exploit-pack-updated/",0},
+              {"I\008mg\027Y\014Wv\001a\029Pc\031I\014",1,true,"GonDadEK etSecurityManager with static XOR key http://www.kahusecurity.com/2013/chinese-exploit-pack-updated/",0},
               {"javafx/application/Preloader","javafx/stage/Stage","javafx/application/Application",3,true,"Java7u21 Click2play Bypass http://seclists.org/bugtraq/2013/Jul/41 ???",0}, 
-              {"[cC][Mm][dD]\x2e[Ee][Xx][Ee]%s/[Cc]",1,false,"cmd.exe /c as seen in IceFog/SplinterRat",0},
-              {"\x5c[Ss][Oo][Ff][Tt][Ww][Aa][Rr][Ee]\x5c[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\x5c[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\x5c[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\x5c[Rr][Uu][Nn]",1,false,"Access to windows Run key",0},
+              {"[cC][Mm][dD]\046[Ee][Xx][Ee]%s/[Cc]",1,false,"cmd.exe /c as seen in IceFog/SplinterRat",0},
+              {"\092[Ss][Oo][Ff][Tt][Ww][Aa][Rr][Ee]\092[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\092[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\092[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\092[Rr][Uu][Nn]",1,false,"Access to windows Run key",0},
              }
 
 obfus_strings = {
@@ -266,7 +266,7 @@ function common(t,verbose)
                     end
                 end
 -- Zupionic Kurz Instruments 
-                fnd = string.find(u,"\x55\x04\x03\x13\x16Kurz Instruments, Inc.",1,true)
+                fnd = string.find(u,"\085\004\003\019\022Kurz Instruments, Inc.",1,true)
                 if fnd then
                     rtn = 1
                     if (verbose==1) then
@@ -276,7 +276,7 @@ function common(t,verbose)
                     end
                 end
 -- R P Infosystems Instruments 
-                fnd = string.find(u,"\x55\x04\x03..R P Infosystems Pvt Ltd")
+                fnd = string.find(u,"\085\004\003..R P Infosystems Pvt Ltd")
                 if fnd then
                     rtn = 1
                     if (verbose==1) then
@@ -287,7 +287,7 @@ function common(t,verbose)
                 end
 
 -- Zupionic iLoq Oy 
-                fnd = string.find(u,"\x55\x04\x03..iLoq Oy")
+                fnd = string.find(u,"\085\004\003..iLoq Oy")
                 if fnd then
                     rtn = 1
                     if (verbose==1) then
@@ -297,7 +297,7 @@ function common(t,verbose)
                     end
                 end
 -- Zupionic Queens University 
-                fnd = string.find(u,"\x55\x04\x03..Queen\x27s University")
+                fnd = string.find(u,"\085\004\003..Queen\039s University")
                 if fnd then
                     rtn = 1
                     if (verbose==1) then
@@ -307,7 +307,7 @@ function common(t,verbose)
                     end
                 end
 -- Bitcoin Self Signed Leading to CyberGate 
-                fnd = string.find(u,"\x55\x04\x03\x13\x0dJames Patrick",1,true)
+                fnd = string.find(u,"\085\004\003\019\013James Patrick",1,true)
                 if fnd then
                     rtn = 1
                     if (verbose==1) then
@@ -317,7 +317,7 @@ function common(t,verbose)
                     end
                 end
 -- Icefog Cert
-                fnd = string.find(u,"\x55\x1d\x11\x04\x19\x30\x17\x81\x15admin@warmestsoft.net",1,true)
+                fnd = string.find(u,"\085\029\017\004\025\048\023\129\021admin@warmestsoft.net",1,true)
                 if fnd then
                     rtn = 1
                     if (verbose==1) then

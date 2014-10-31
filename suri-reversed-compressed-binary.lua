@@ -36,7 +36,7 @@ end
 function common(t,verbose)
     rtn = 0
 --- Look for zlib magic
-    if string.sub(t,-1) == "\x78" then
+    if string.sub(t,-1) == "\120" then
         stream = lz.inflate()
         ustream, eof, bytes_in, uncompressed_len = stream(string.reverse(t))
         if string.sub(ustream,1,2) == "MZ" then

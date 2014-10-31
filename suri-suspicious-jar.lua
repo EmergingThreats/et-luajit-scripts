@@ -117,7 +117,7 @@ function match(args)
             f:close()
             --print("working with " .. w.filename)            
             -- Is this a class file? If not we don't want to inspect more
-            if string.sub(t,1,4) == "\xca\xfe\xba\xbe" then
+            if string.sub(t,1,4) == "\202\254\186\190" then
                 -- Find our Evil strings
                 if find_set_match_multi_file(t,s_one_and_done,s_one_and_done_cnt,true) == 1 then
                     rtn = 1

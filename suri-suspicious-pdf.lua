@@ -81,7 +81,7 @@ function suspicious_string_search(js,verbose)
             end
         end
     end
-    fnd = string.find(js,"\x2c\x24\x24\x24\x24\x3a\x28\x21\x5b\x5d\x2b\x22\x22\x29\x5b",0,true)
+    fnd = string.find(js,"\044\036\036\036\036\058\040\033\091\093\043\034\034\041\091",0,true)
     if fnd ~= nil then
         if verbose == 1 then
             print("Suspicous: Found JJEncoded Script")
@@ -91,7 +91,7 @@ function suspicious_string_search(js,verbose)
         end
     end
     --Evertyhing below this line has quotes and + removed
-    js = string.gsub(js,"[\x22\x27%+]","")
+    js = string.gsub(js,"[\034\039%+]","")
     fnd = string.find(js,"=%[XA%(%(%d%),0-[A-F0-9]-%),XA%(%(%d%),0-[A-F0-9]-%),XA%(%(%d%),0-[A-F0-9]-%)")
     if fnd ~= nil then
         if verbose == 1 then
@@ -165,10 +165,10 @@ function suspicious_string_search(js,verbose)
             return 1
         end
     end
-    fnd = string.find(js,"\x5cu4f4f\x5cu4f4f",0,true)
+    fnd = string.find(js,"\092u4f4f\092u4f4f",0,true)
     if fnd ~= nil then
         if verbose == 1 then
-            print("Suspicous: Found \x5cu4f4f\x5cu4f4f Spray String in JS")
+            print("Suspicous: Found \092u4f4f\092u4f4f Spray String in JS")
             ret = 1
         else
             return 1
@@ -260,7 +260,7 @@ function suspicious_string_search(js,verbose)
          end
     end
     
---[[    _,_,fnd = string.find(js,"return%([ \r%s]-[\x22\x27]([a-zA-Z0-9%+]-)[\x22\x27]")
+--[[    _,_,fnd = string.find(js,"return%([ \r%s]-[\034\039]([a-zA-Z0-9%+]-)[\034\039]")
     if fnd ~= nil and string.len(fnd) > 512 then
         if verbose == 1 then
             print("Suspicous: Found return of static hex string longer than 512 chars")
@@ -295,14 +295,14 @@ function parse_object(obj_data,verbose)
             local sstart,send,stream_data = string.find(obj_data,"^(.-)\n?endstream",stream_start+1)
 
             --this is a pretty dumb way to deal with this we should parse all Filters and process them in an ordered list but since we only support 2 right now.... 
-            if string.find(tag_data,'\x2fFilter[\r\n%s]-\x2fFlateDecode') ~= nil or string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fFlateDecode[\r\n%s]-]') ~= nil then
+            if string.find(tag_data,'\047Filter[\r\n%s]-\047FlateDecode') ~= nil or string.find(tag_data,'\047Filter[\r\n%s]-%[[\r\n%s]-\047FlateDecode[\r\n%s]-]') ~= nil then
                 stream_data_final = FlateDecode(stream_data)
-            elseif string.find(tag_data,'\x2fFilter[\r\n%s]-\x2fASCIIHexDecode') ~= nil or string.find(tag_data,'\x2fFilter[\r\n%s]-%[?[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-%]?') ~= nil then
+            elseif string.find(tag_data,'\047Filter[\r\n%s]-\047ASCIIHexDecode') ~= nil or string.find(tag_data,'\047Filter[\r\n%s]-%[?[\r\n%s]-\047ASCIIHexDecode[\r\n%s]-%]?') ~= nil then
                 stream_data_final = AsciiHexDecode(stream_data)
-            elseif string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-\x2fFlateDecode[\r\n%s]-%]') ~= nil then
+            elseif string.find(tag_data,'\047Filter[\r\n%s]-%[[\r\n%s]-\047ASCIIHexDecode[\r\n%s]-\047FlateDecode[\r\n%s]-%]') ~= nil then
                 stream_data = AsciiHexDecode(stream_data)
                 stream_data_final = FlateDecode(stream_data)
-            elseif string.find(tag_data,'\x2fFilter[\r\n%s]-%[[\r\n%s]-\x2fFlateDecode[\r\n%s]-\x2fASCIIHexDecode[\r\n%s]-%]') ~= nil then
+            elseif string.find(tag_data,'\047Filter[\r\n%s]-%[[\r\n%s]-\047FlateDecode[\r\n%s]-\047ASCIIHexDecode[\r\n%s]-%]') ~= nil then
                 stream_data = FlateDecode(stream_data)
                 stream_data_final = AsciiHexDecode(stream_data)
             else

@@ -56,17 +56,17 @@ susp_class = {
               {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"},
               {"function(p,a,c,k,e,d)",1,true,"Edwards packer"},
               {"DirtyData","OYaDood",2,true,"Malvertisng Redirect"},
-              {"getVersion(\x22Java\x22)",1,true,"Malvertising PluginDetect Get Java Version"},
-              {"getVersion(\x22AdobeReader\x22)",1,true,"Malvertising PluginDetect Get Adobe Reader Version"},
-              {"C\x3a\x5cUsers\x5cVlaDis\x5cDocuments\x5cFlashDevelop\x5ccareer\x5csrc",1,true,"Malvertising EK Redirect"},
+              {"getVersion(\034Java\034)",1,true,"Malvertising PluginDetect Get Java Version"},
+              {"getVersion(\034AdobeReader\034)",1,true,"Malvertising PluginDetect Get Adobe Reader Version"},
+              {"C\058\092Users\092VlaDis\092Documents\092FlashDevelop\092career\092src",1,true,"Malvertising EK Redirect"},
               {"9b909c8a929a918bd19c8d9a9e8b9aba939a929a918bd7d896998d9e929ad8d6c4",1,true,"Malvertising xor'd iframe http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
               {"978b8b8fc5d0d0",1,true,"Malvertising xor'd http:// http://malware.dontneedcoffee.com/2013/08/cbeplayp-history-increased-activity.html"},
               {"King Lich V",1, true,"CK EK http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
               {"ExploitSwf",1, true,"Angler EK"},
-              {"\x01\x00\x00\x00\x00\x00\xfe\x1f\xca",1,true,"Malvertising XORed Flash file #1"},
-              {"\x01\x00\x00\x00\x00\x00\xce\x5f\xc5",1,true,"Malvertising XORed Flash file #2"},
-              {"\x01\x00\x00\x00\x00\x00\xce\xa2\x6f",1,true,"Malvertising XORed Flash file #3"},
-              {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\x3a\x2f\x2f","location.href",4,true,"ms-help as location href likely spray attempt"},
+              {"\001\000\000\000\000\000\254\031\202",1,true,"Malvertising XORed Flash file #1"},
+              {"\001\000\000\000\000\000\206\095\197",1,true,"Malvertising XORed Flash file #2"},
+              {"\001\000\000\000\000\000\206\162\111",1,true,"Malvertising XORed Flash file #3"},
+              {"SharePoint.OpenDocuments.4","SharePoint.OpenDocuments.3","ms-help\058\047\047","location.href",4,true,"ms-help as location href likely spray attempt"},
               {"JavaWebStart.isInstalled.1.6.0.0","JavaWebStart.isInstalled.1.7.0.0",1,true,"Possible ASLR Bypass JavaWebStart"},
               {"BITCH_SEARCH_RADIUS_DWORDS",1,true,"e-how/livestrong malicious SWF file"},
               {"createIframe(","getCookie(","createCookie(","navigator.userAgent.toString",4,true,"SWF CookieBomb"},
@@ -76,12 +76,12 @@ susp_class = {
               {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
-              {"Vector","\x1d\x01\x01\x05OZZDLG[DCM[GE[@AZ\x16\x14\x19\x16DDD[\x10\x0d\x10uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\x01\x02",2,true,"VFW ASLR Bypass"},
-              {"C:\x5cUsers\x5c007\x5cDesktop\x5cFlashExp(ie)\x5csrc",1,true,"Flash 0-day Feb 19 2014 007 Debug String"},
+              {"Vector","\029\001\001\005OZZDLG[DCM[GE[@AZ\022\020\025\022DDD[\016\013\016uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\001\002",2,true,"VFW ASLR Bypass"},
+              {"C:\092Users\092007\092Desktop\092FlashExp(ie)\092src",1,true,"Flash 0-day Feb 19 2014 007 Debug String"},
               {"createRandomPassword","allowLoadBytesCodeExecution","%]%.replace%(%/.-%/g,[^%)]-%)%.replace%(%/.-%/g,[^%)]-%)%}eval%(",3,false,"Malvertising With Plugin-Detect"},
               {"RegExp","||||||||||||||||||||","(?i)()()(?-i)",3,true,"NuclearEK"},
-              {"RegExp","\x28\x3f\x2d\x4a\x29\x28\x3f\x2d\x69\x29","||||||||||||||||||||","\x29\x28\x3f\x2d\x69\x29",3,true,"Flash Exploit"},
-              {"RegExp","\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d\x28\x3f\x3d",2,true,"Flash Exploit"},
+              {"RegExp","\040\063\045\074\041\040\063\045\105\041","||||||||||||||||||||","\041\040\063\045\105\041",3,true,"Flash Exploit"},
+              {"RegExp","\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061",2,true,"Flash Exploit"},
               {"DoExploit","scan_for_rop_gadgets","make_vtable_rop_and_shellcode",1,true,"NuclearEK"},
               {"y5ncGlra25lcw","vial",2,true,"Goon/Fiesta"},
               {"bb4v45nywriteUns","soonug","ibvctm3tloadB","g4f53addEven",1,true,"FiestaEK"},
@@ -300,7 +300,7 @@ function common(t,o,verbose)
         if tagtype == 91 then
             ttfoffset = offset + 3
             -- Find the end of the font name
-            ttfoffset = string.find(t,'\x00',ttfoffset,true) + 1
+            ttfoffset = string.find(t,'\000',ttfoffset,true) + 1
             if verbose==1 then print("ttoffset = " .. ttfoffset) end
             ttf = string.sub(t,ttfoffset, ttfoffset + shortlen)
             ktag = string.find(ttf,'kern',12,true)
@@ -309,10 +309,10 @@ function common(t,o,verbose)
                 ktoffset = struct.unpack(">I4",string.sub(ttf,ktag + 8, ktag + 11))
                 if verbose==1 then print("ktoffset, shortlen = " .. ktoffset .. "," .. shortlen) end
                 --make sure this is the type we are looking for
-                if string.sub(ttf,ktoffset + 1, ktoffset + 4) == "\x00\x01\x00\x00" then
+                if string.sub(ttf,ktoffset + 1, ktoffset + 4) == "\000\001\000\000" then
                     --print("made it this far")
                     ntables = struct.unpack(">I4",(string.sub(ttf,ktoffset + 5, ktoffset + 8)))
-                    ntables_bad = struct.unpack(">I4","\x10\x00\x00\x00") 
+                    ntables_bad = struct.unpack(">I4","\016\000\000\000") 
                     if ntables >= ntables_bad then
                         if verbose==1 then print("we have a match " .. ntables) end
                         return 1
@@ -337,7 +337,7 @@ function common(t,o,verbose)
             DoABC = string.sub(t,offset, offset + shortlen)
             s,e = string.find(DoABC,"RegExp",0,true)
             if s ~= nil then
-                _,_,capture =string.find(DoABC,"(%#[\x20-\x7f]*%(%?[sxXmUJ]*i[sxXmUJ]*%-?[sxXmUJ]*%)[\x20-\x7f]*%(%?[sxXmUJ]*%-[sxXmUJ]*i[sxXmUJ]*%)[\x20-\x7f]*%|%|)",s)
+                _,_,capture =string.find(DoABC,"(%#[\032-\127]*%(%?[sxXmUJ]*i[sxXmUJ]*%-?[sxXmUJ]*%)[\032-\127]*%(%?[sxXmUJ]*%-[sxXmUJ]*i[sxXmUJ]*%)[\032-\127]*%|%|)",s)
                 if capture ~= nil then
                     if verbose==1 then print("Found CVE-2013-0634 " .. capture) end
                     return 1
@@ -349,7 +349,7 @@ function common(t,o,verbose)
             local bindata = string.sub(t,offset + 6,offset + shortlen)
             if verbose==1 then print("DefineBinary tag id " .. ((256*t:byte(offset+1)) + t:byte(offset)) .. " at " .. offset) end
             if string.find(bindata,"defaultValue",0,true) ~= nil and string.find(bindata,"maxValue",0,true) ~= nil and string.find(bindata,"minValue",0,true) ~= nil then
-                local cs,ce =string.find(bindata,"\xA2\x07\x64\x65\x66\x61\x75\x6C\x74\x56\x61\x6C\x75\x65\x00")
+                local cs,ce =string.find(bindata,"\162\007\100\101\102\097\117\108\116\086\097\108\117\101\000")
                 if ce ~= nil then
                     local m2 = string.sub(bindata,ce+5,ce+8)
                     sfloat = struct.unpack("<I4",m2)
