@@ -47,6 +47,7 @@ Chris Wakelin
 -- {strings to match, number of matching strings needed, simple match, DoABC tag needed, description}
 susp_class = {
               {"shellcode",1,true,"shellcode mentioned"},
+              {"0x9Rl5W59Rl5W59Rl5W59Rl5W5",1,true,"SWT/RIG 2014-0569 NOP with subs"}, 
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
               {"payloadRc4Key","import exploit","exploitUrl",1,true,"Job314 EK"},
@@ -88,6 +89,7 @@ susp_class = {
               {"Tope","Pidj7gbU",2,true,"DeputyDog"},
               {"naidnEelttil","reverse",2,true,"CottonCastle"},
               {"avm2.intrinsics.memory","domainMemory","Capabilities","11,0,1,152","ByteArray","littleEndian",6,true,"Possible CVE-2014-0497"},
+              {"boobe","90909090909090909090909090909090","atomicCompareAndSwapLength","RegExp",4,true,"Possible SweetOrange"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
