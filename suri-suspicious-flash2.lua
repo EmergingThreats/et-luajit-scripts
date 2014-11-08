@@ -322,6 +322,7 @@ function common(t,o,verbose)
                 end
             end
         end
+        --[[
         if tagtype == 20 or tagtype == 36 then
             local imgid = struct.unpack("<I2",string.sub(t,offset, offset + 1))
             local format = struct.unpack("<I1",string.sub(t,offset + 2,offset + 2))
@@ -334,6 +335,7 @@ function common(t,o,verbose)
                     return 1
             end
         end
+        ]]--
         --DoABC tag
         if tagtype == 82 then
             DoABC = string.sub(t,offset, offset + shortlen)
