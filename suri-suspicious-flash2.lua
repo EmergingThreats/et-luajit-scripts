@@ -91,6 +91,8 @@ susp_class = {
               {"avm2.intrinsics.memory","domainMemory","Capabilities","11,0,1,152","ByteArray","littleEndian",6,true,"Possible CVE-2014-0497"},
               {"boobe","90909090909090909090909090909090","atomicCompareAndSwapLength","RegExp",4,true,"Possible SweetOrange"},
               {"F:\092EXP\092CVE-2014-0569","ropgadget","buildx32rop","buildx64rop",1,"true","Possible Nuclear 2014-0569"},
+              {"C:\092project1\092src;;aeryk.as",1,true,"Archie"},
+              {"101d1952....4a4a",1,false,"NullHole XOR 74 ZWS File"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
