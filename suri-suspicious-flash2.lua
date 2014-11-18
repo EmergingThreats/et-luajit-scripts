@@ -47,6 +47,7 @@ Chris Wakelin
 -- {strings to match, number of matching strings needed, simple match, DoABC tag needed, description}
 susp_class = {
               {"shellcode",1,true,"shellcode mentioned"},
+              {"FindRopGadgets",1,true,"FindRopGadgets Function Observed in FlashPack"},
               {"0x9Rl5W59Rl5W59Rl5W59Rl5W5",1,true,"SWT/RIG 2014-0569 NOP with subs"}, 
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
