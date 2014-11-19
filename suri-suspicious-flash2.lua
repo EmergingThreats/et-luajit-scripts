@@ -94,6 +94,8 @@ susp_class = {
               {"F:\092EXP\092CVE-2014-0569","ropgadget","buildx32rop","buildx64rop",1,"true","Possible Nuclear 2014-0569"},
               {"C:\092project1\092src;;aeryk.as",1,true,"Archie"},
               {"101d1952....4a4a",1,false,"NullHole XOR 74 ZWS File"},
+              {"086c15c68e55a86ce8695e74431e",1,true,"Unknown EK Flash Exploit Key"},
+              {"liveTimeLock","applyXor","paint.net",3,true,"Unknown EK Flash Exploit"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
