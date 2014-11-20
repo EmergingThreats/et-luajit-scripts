@@ -52,6 +52,7 @@ susp_class = {
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
               {"payloadRc4Key","import exploit","exploitUrl",1,true,"Job314 EK"},
+              {"exploit","crypt","landing","json",3,true,"Job314 EKv2"},
               {"#default#VML","dashstyle.array.length",2,"true","Probable CVE-2013-2551 Exploit"},
               {"<applet",1,"true","Applet Tag Inside of Flash"},
               {"base64","Q1dT",2,true,"Base64 encoded Flash file"},
@@ -96,6 +97,7 @@ susp_class = {
               {"101d1952....4a4a",1,false,"NullHole XOR 74 ZWS File"},
               {"086c15c68e55a86ce8695e74431e",1,true,"Unknown EK Flash Exploit Key"},
               {"liveTimeLock","applyXor","paint.net",3,true,"Unknown EK Flash Exploit"},
+              {"l%d-o%d-a%d-d%d-B%d-y%d-t%d-e%d-s",1,false,"Angler EK"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
