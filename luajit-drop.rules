@@ -1,0 +1,56 @@
+#*************************************************************
+#  Copyright (c) 2003-2012, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+
+##### Existing Rules
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET POLICY Java Client HTTP Request"; flow:established,to_server; content:" Java/1."; http_user_agent; flowbits:set,ET.http.javaclient; flowbits:noalert; classtype:misc-activity; sid:2013035; rev:2;)
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET POLICY Vulnerable Java Version 1.6.x Detected"; flow:established,to_server; content:" Java/1.6.0_"; http_user_agent; content:!"37"; within:2; http_user_agent; flowbits:set,ET.http.javaclient.vulnerable; threshold: type limit, count 2, seconds 300, track by_src; reference:url,javatester.org/version.html; classtype:bad-unknown; sid:2011582; rev:24;)
+#alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET POLICY Vulnerable Java Version 1.7.x Detected"; flow:established,to_server; content:" Java/1.7.0_0"; http_user_agent; content:!"9"; within:1; http_user_agent; flowbits:set,ET.http.javaclient.vulnerable; threshold: type limit, count 2, seconds 300, track by_src; reference:url,javatester.org/version.html; classtype:bad-unknown; sid:2014297; rev:13;)
+#alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET WEB_CLIENT Microsoft OLE Compound File Magic Bytes Flowbit Set"; flow:to_client,established; file_data; content:"|d0 cf 11 e0 a1 b1 1a e1|"; within:8; content:!".msi"; flowbits:set,OLE.CompoundFile; flowbits:noalert; classtype:protocol-command-decode; sid:2012520; rev:7;)
+
+#####
+#alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"LUAJIT test - match XORed binary"; flowbits:isset,ET.http.javaclient.vulnerable; flowbits:isnotset,ET.http.binary; luajit:suri-xor-binary-detect.lua; filestore:response; sid:379000001; rev:4;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT CURRENT_EVENTS XORed binary via Java"; flowbits:isset,ET.http.javaclient; flowbits:isnotset,ET.http.binary; luajit:suri-xor-binary-quick.lua; filestore:response; classtype:trojan-activity; sid:379000001; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT CURRENT_EVENTS Suspicious Jar"; flowbits:isset,ET.http.javaclient; file_data; content:"PK"; depth:2; luajit:suri-suspicious-jar2.lua; filestore:response; classtype:trojan-activity; sid:379000002; rev:2;)
+#alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT CURRENT_EVENTS Suspicious Jar via vulnerable client"; flowbits:isset,ET.http.javaclient.vulnerable; file_data; content:"PK"; depth:2; luajit:suri-suspicious-jar2.lua; filestore:response; classtype:trojan-activity; sid:379000003; rev:2;)
+#alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT zip test - Blackhole 2.x <name>[abc].class Jar"; flowbits:isset,ET.http.javaclient; file_data; content:"PK"; depth:2; luajit:suri-bh2-abc-jar.lua; filestore:response; sid:379000004; rev:1;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT CURRENT_EVENTS XORed-non-zero binary"; flow:from_server,established; file_data; content:"|00 00 00 00 00 00|"; offset:48; depth:54; luajit:suri-xor-non-zero.lua; filestore:response; classtype:trojan-activity; sid:379000005; rev:2;)
+#
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious Adobe Flash file (Uncompressed)"; flow:from_server,established; file_data; content:"FWS"; depth:3; luajit:suri-suspicious-flash2.lua; classtype:trojan-activity; sid:7016688; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious Adobe Flash file (Compressed)"; flow:from_server,established; file_data; content:"CWS"; depth:3; luajit:suri-suspicious-flash2.lua; classtype:trojan-activity; sid:7016687; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious Adobe Flash file (Compressed LZMA)"; flow:from_server,established; file_data; content:"ZWS"; depth:3; luajit:suri-suspicious-flash2.lua; classtype:trojan-activity; sid:9016687; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious Adobe Flash file (Uncompressed, OLE)"; flow:from_server,established; file_data; flowbits:isset,OLE.CompoundFile; content:"kern"; fast_pattern:only;  content:"FWS"; luajit:suri-suspicious-flash2.lua; classtype:trojan-activity; sid:6688; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious Adobe Flash file (Compressed, OLE)"; flow:from_server,established; file_data; flowbits:isset,OLE.CompoundFile; content:"CWS"; luajit:suri-suspicious-flash2.lua; classtype:trojan-activity; sid:6687; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious Adobe Flash file (Compressed LZMA, OLE)"; flow:from_server,established; file_data; flowbits:isset,OLE.CompoundFile; content:"ZWS"; luajit:suri-suspicious-flash2.lua; classtype:trojan-activity; sid:6689; rev:5;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT WEB_CLIENT Suspicious PDF"; flow:from_server,established; file_data; content:"%PDF-"; within:20; luajit:suri-suspicious-pdf.lua; classtype:trojan-activity; sid:99221187; rev:1;)
+#
+drop http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET LUAJIT Probable Styx Acrobat exploit URL"; flow:established,to_server; urilen:>200; content:".pdf"; http_uri; luajit:suri-styx-url.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000007; rev:1;)
+drop http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET LUAJIT Probable Styx Java exploit URL"; flow:established,to_server; content:"Java/1"; http_user_agent; urilen:>200; content:".jar"; http_uri; luajit:suri-styx-url.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000008; rev:1;)
+drop http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET LUAJIT Probable Styx font exploit URL"; flow:established,to_server; urilen:>200; content:".eot"; http_uri; luajit:suri-styx-url.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000009; rev:1;)
+drop http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET LUAJIT Probable Styx URL"; flow:established,to_server; urilen:>200; content:".html"; http_uri; luajit:suri-styx-url.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000010; rev:1;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT CURRENT_EVENTS Reversed compressed binary via Java"; flow:from_server,established; flowbits:isset,ET.http.javaclient; file_data; content:"|78|"; fast_pattern:only; pcre:"/\x78$/R"; luajit:suri-reversed-compressed-binary.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000011; rev:1;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT Possible SilverLight Exploit CVE-2013-0074"; flow:from_server,established; file_data; content:"PK"; within:2; content:"AppManifest.xaml"; nocase; luajit:CVE-2013-0074.lua; classtype:trojan-activity; sid:379000012; rev:2;)
+drop http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET LUAJIT Probable Nuclear landing URL"; flow:established,to_server; urilen:>40; content:".html"; http_uri; pcre:"/^\/[a-f0-9A-Z\-\_]+(\/\d+\/[0-9a-f]{32})?\.html$/U"; luajit:suri-nuclear-url.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000013; rev:1;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT suspicious pack200-ed JAR file"; flow:from_server,established; flowbits:isset,ET.http.javaclient; file_data; content:"|1f 8b 08 00|"; depth:4; luajit:suri-suspicious-pack200jar.lua; flowbits:set,et.exploitkitlanding; classtype:trojan-activity; sid:379000017; rev:1;)
+alert tls any any -> any any (msg:"ET LUAJIT TLS HEARTBLEED malformed heartbeat record"; flow:established,to_server; dsize:>7; content:"|18 03|"; depth:2; byte_test:1,<,4,2; luajit:tls-heartbleed.lua; classtype:misc-attack; sid:378000017; rev:1;)
+drop http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET LUAJIT PPT with oleObject contaning INF from SMB Probably CVE-2014-4114"; flow:established,from_server; file_data; content:"ppt/embeddings/oleObject"; luajit:CVE-2014-4114.lua; sid:14919911; rev:1; classtype:attempted-admin;)
