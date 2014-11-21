@@ -52,7 +52,7 @@ susp_class = {
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
               {"payloadRc4Key","import exploit","exploitUrl",1,true,"Job314 EK"},
-              {"exploit","crypt","landing","json",3,true,"Job314 EKv2"},
+              {"exploit","crypt","landing",3,true,"Job314 EKv2"},
               {"#default#VML","dashstyle.array.length",2,"true","Probable CVE-2013-2551 Exploit"},
               {"<applet",1,"true","Applet Tag Inside of Flash"},
               {"base64","Q1dT",2,true,"Base64 encoded Flash file"},
