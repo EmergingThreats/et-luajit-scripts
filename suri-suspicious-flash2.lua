@@ -54,7 +54,7 @@ susp_class = {
               {"payloadRc4Key","import exploit","exploitUrl",1,true,"Job314 EK"},
               {"exploit","crypt","landing",3,true,"Job314 EKv2"},
               {"#default#VML","dashstyle.array.length",2,"true","Probable CVE-2013-2551 Exploit"},
-              {"<applet",1,"true","Applet Tag Inside of Flash"},
+              --{"<applet",1,"true","Applet Tag Inside of Flash"},
               {"base64","Q1dT",2,true,"Base64 encoded Flash file"},
               {"LadyBoyle_",1,true,"Flash 0day LadyBoyle string"},
               {"function(p,a,c,k,e,d)",1,true,"Edwards packer"},
@@ -77,6 +77,8 @@ susp_class = {
               {"cookie_al_new","externalXML","navigator.userAgent.toString","externalXML",4,true,"SWF CookieBomb 2"},
               {"rop_gadget","DoExploit","attacker_class_bin",1,true,"SWT/GrandSoft Exploit"},
               {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
+              {"[Rr][Oo][Pp][_]-[Gg][Aa][Dd][Ee][Tt]",1,false,"RopGadget string found"},
+              {"[Rr][Oo][Pp][Cc][Hh][Aa][Ii][Nn]",1,false,"RopChain string found"},
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
               {"Vector","\029\001\001\005OZZDLG[DCM[GE[@AZ\022\020\025\022DDD[\016\013\016uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\001\002",2,true,"VFW ASLR Bypass"},
@@ -97,7 +99,7 @@ susp_class = {
               {"101d1952....4a4a",1,false,"NullHole XOR 74 ZWS File"},
               {"086c15c68e55a86ce8695e74431e",1,true,"Unknown EK Flash Exploit Key"},
               {"liveTimeLock","applyXor","paint.net",3,true,"Unknown EK Flash Exploit"},
-              {"l%d+o%d+a%d+d%d+B%d+y%d+t%d+e%d+s",1,false,"Angler EK"}, 
+              {"l%d+o%d+a%d+d%d+B%d+y%d+t%d+e%d+s",1,false,"Angler EK"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -354,6 +356,14 @@ function common(t,o,verbose)
                     if verbose==1 then print("Found CVE-2013-0634 " .. capture) end
                     return 1
                 end
+                s,e,c1,c2=string.find(DoABC,"(0x9([A-Za-z0-8]+)9)")
+                if c1 ~= nil then
+                    local swt_split = c1 .. c2 .. "9" .. c2
+                    if string.sub(DoABC,s,s + string.len(swt_split)-1) == swt_split  and string.find(DoABC,"%W0x%W") ~= nil then
+                        if verbose==1 then print("Found SweetOrange Split " .. swt_split) end
+                        return 1
+                    end
+                end            
             end
         end
         if tagtype == 87 then
