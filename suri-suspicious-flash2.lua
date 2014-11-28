@@ -77,8 +77,7 @@ susp_class = {
               {"cookie_al_new","externalXML","navigator.userAgent.toString","externalXML",4,true,"SWF CookieBomb 2"},
               {"rop_gadget","DoExploit","attacker_class_bin",1,true,"SWT/GrandSoft Exploit"},
               {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
-              {"[Rr][Oo][Pp][_]-[Gg][Aa][Dd][Ee][Tt]",1,false,"RopGadget string found"},
-              {"[Rr][Oo][Pp][Cc][Hh][Aa][Ii][Nn]",1,false,"RopChain string found"},
+              {"[Rr][Oo][Pp][_]-[Gg][Aa][Dd][Gg][Ee][Tt]",1,false,"RopGadget string found"},
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
               {"Vector","\029\001\001\005OZZDLG[DCM[GE[@AZ\022\020\025\022DDD[\016\013\016uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\001\002",2,true,"VFW ASLR Bypass"},
@@ -365,6 +364,14 @@ function common(t,o,verbose)
                         return 1
                     end
                 end            
+            end
+            s,e = string.find(DoABC,"[TtcCpP]ropChain")
+            if s ~= nil then
+                s,e = string.find(DoABC,"[Rr][Oo][Pp][Cc][Hh][Aa][Ii][Nn]")
+                if s ~= nil then
+                    if verbose==1 then print("Found RopChain") end
+                    return 1                        
+                end
             end
         end
         if tagtype == 87 then
