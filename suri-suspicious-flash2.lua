@@ -357,7 +357,7 @@ function common(t,o,verbose)
                     if verbose==1 then print("Found CVE-2013-0634 " .. capture) end
                     return 1
                 end
-                s,e,c1,c2=string.find(DoABC,"(0x9([A-Za-z0-8]+)9)")
+                s,e,c1,c2=string.find(DoABC,"(0x9([A-Za-z0-8][A-Za-z0-8]+)9)")
                 if c1 ~= nil then
                     local swt_split = c1 .. c2 .. "9" .. c2
                     if string.sub(DoABC,s,s + string.len(swt_split)-1) == swt_split  and string.find(DoABC,"%W0x%W") ~= nil then
