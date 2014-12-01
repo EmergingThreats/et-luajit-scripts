@@ -87,6 +87,7 @@ susp_class = {
               {"RegExp","\040\063\045\074\041\040\063\045\105\041","||||||||||||||||||||","\041\040\063\045\105\041",3,true,"Flash Exploit"},
               {"RegExp","\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061\040\063\061",2,true,"Flash Exploit"},
               {"DoExploit","scan_for_rop_gadgets","make_vtable_rop_and_shellcode",1,true,"NuclearEK"},
+              {"func_decodestr","func_strtobytearr","loadBytes","%W0x%W",4,false,"NuclearEK"},
               {"y5ncGlra25lcw","vial",2,true,"Goon/Fiesta"},
               {"bb4v45nywriteUns","soonug","ibvctm3tloadB","g4f53addEven",1,true,"FiestaEK"},
               {"Tope","Pidj7gbU",2,true,"DeputyDog"},
