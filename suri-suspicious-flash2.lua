@@ -1,7 +1,8 @@
 --[[
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
+     This program is free software; you can redistribute it and/or modify
+     it under the terms of the GNU General Public License as published by
+     the Free Software Foundation; either version 2 of the License, or
+
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
@@ -100,7 +101,7 @@ susp_class = {
               {"086c15c68e55a86ce8695e74431e",1,true,"Unknown EK Flash Exploit Key"},
               {"liveTimeLock","applyXor","paint.net",3,true,"Unknown EK Flash Exploit"},
               {"l%d+o%d+a%d+d%d+B%d+y%d+t%d+e%d+s",1,false,"Angler EK"},
-              {"iyokurnbdcdqik$","qbhtjytvwcu$","wfbkgksaqqjie$","dgxomfculljox$",1,true,"Job314"},
+              {"iyokurnbdcdqik$","qbhtjytvwcu$","wfbkgksaqqjie$","dgxomfculljox$","yesfkpfxshqyu$","xocgbxgjzzb$","iukzblnpjqvx$","bkznfjksbcpp$",1,true,"Job314"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -243,6 +244,21 @@ function match_strings(a,match_set,verbose)
     return rtn
 end
 
+function job314_check(a,verbose)
+    local rtn = 0
+    s,e = string.find(a,"%Wcontainer%W")
+    if s ~= nil then
+        s,e,m,c1,c2,c3,c4 = string.find(a,"(a[-_]+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+container%W)")
+        if s ~= nil then
+             if string.len(c1) > 10 and string.len(c1) < 15 and string.len(c2) > 31 and string.len(c2) < 43 and string.len(c3) > 10 and string.len(c3) < 15 and string.len(c4) > 31 and string.len(c4) < 43 then
+                if verbose == 1 then print("Found Job314") end
+                rtn = 1
+             end
+        end
+    end
+    return rtn
+end
+    
 function common(t,o,verbose)
     -- Method should work for Flash inside of OLE etc.
 --    local o = args["offset"]
@@ -275,6 +291,13 @@ function common(t,o,verbose)
         return 0
     end
     --print(t)
+    if job314_check(t,verbose) == 1 then
+        if (verbose == 0) then
+            return 1
+        else
+            rtn = 1
+        end 
+    end
     for l,s in pairs(susp_class) do
         if (verbose==1) then print("Looking for " .. s[#s]) end
         if match_strings(t,s,verbose) == 1 then
