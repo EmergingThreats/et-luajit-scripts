@@ -390,9 +390,9 @@ function common(t,o,verbose)
                 end            
             end
             s,e = string.find(DoABC,"[TtcCpP]ropChain")
-            if s ~= nil then
+            if s == nil then
                 s,e = string.find(DoABC,"[Rr][Oo][Pp][Cc][Hh][Aa][Ii][Nn]")
-                if s == nil then
+                if s ~= nil then
                     if verbose==1 then print("Found RopChain") end
                     return 1                        
                 end
