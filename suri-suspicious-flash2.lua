@@ -246,15 +246,13 @@ end
 
 function job314_check(a,verbose)
     local rtn = 0
-    s,e = string.find(a,"%Wcontainer%W")
+    s,e,m,c1,c2,c3,c4 = string.find(a,"(_a[-_]+%W-%W_a[-_]+%W-_a[-_]+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W-[a-z]+%W)")
     if s ~= nil then
-        s,e,m,c1,c2,c3,c4 = string.find(a,"(a[-_]+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+container%W)")
-        if s ~= nil then
-             if string.len(c1) > 6 and string.len(c1) < 20 and string.len(c2) > 31 and string.len(c2) < 43 and string.len(c3) > 6 and string.len(c3) < 20 and string.len(c4) > 31 and string.len(c4) < 43 then
-                if verbose == 1 then print("Found Job314") end
-                rtn = 1
-             end
-        end
+         print(m)
+         if string.len(c1) > 6 and string.len(c1) < 20 and string.len(c2) > 31 and string.len(c2) < 43 and string.len(c3) > 6 and string.len(c3) < 20 and string.len(c4) > 31 and string.len(c4) < 43 then
+            if verbose == 1 then print("Found Job314") end
+            rtn = 1
+         end
     end
     return rtn
 end
