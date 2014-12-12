@@ -219,8 +219,25 @@ function suspicious_string_search(js,verbose)
         else
             return 1
         end
+    end     
+    fnd = string.find(js,"6xFYuX.FAABJgDQI..XJdff\0474Ojq\047\047\047")
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found Fiesta PDF")
+            ret = 1
+        else
+            return 1
+        end
     end
-
+     _,_,fnd,m1,m2 = string.find(js,"(\093\059([a-z0-9][a-z0-9][a-z0-9]?)=parseInt%([a-z0-9][a-z0-9][a-z0-9]?,16%)\059([a-z0-9][a-z0-9][a-z0-9]?)=%3[a-z0-9][a-z0-9][a-z0-9]?%(%2%)\125return %3\125)")
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found Fiesta PDF M2 " .. fnd)
+            ret = 1
+        else
+            return 1
+        end
+    end
     --CVE-2013-3346
     if string.find(js,"app.removeToolButton",0,true) ~= nil then
         function_table = {}
@@ -270,7 +287,7 @@ function suspicious_string_search(js,verbose)
          end
     end
     
---[[    _,_,fnd = string.find(js,"return%([ \r%s]-[\034\039]([a-zA-Z0-9%+]-)[\034\039]")
+----[[    _,_,fnd = string.find(js,"return%([ \r%s]-[\034\039]([a-zA-Z0-9%+]-)[\034\039]")
     if fnd ~= nil and string.len(fnd) > 512 then
         if verbose == 1 then
             print("Suspicous: Found return of static hex string longer than 512 chars")
@@ -279,7 +296,7 @@ function suspicious_string_search(js,verbose)
             return 1
         end
     end
-]]--
+--]]--
     return ret
 end
 -- Replace this. It is actually a really dumb way to deal with >> in stream data 
