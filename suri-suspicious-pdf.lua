@@ -211,6 +211,16 @@ function suspicious_string_search(js,verbose)
             return 1
         end
     end
+    fnd = string.find(js,"^^^^e^^^^v^^^^a^^^^l^^^^(^^^^v",0,true)
+    if fnd ~= nil then
+        if verbose == 1 then
+            print("Suspicous: Found Nuclear PDF")
+            ret = 1
+        else
+            return 1
+        end
+    end
+
     --CVE-2013-3346
     if string.find(js,"app.removeToolButton",0,true) ~= nil then
         function_table = {}
