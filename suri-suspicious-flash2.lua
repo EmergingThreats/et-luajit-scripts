@@ -101,7 +101,7 @@ susp_class = {
               {"086c15c68e55a86ce8695e74431e",1,true,"Unknown EK Flash Exploit Key"},
               {"liveTimeLock","applyXor","paint.net",3,true,"Unknown EK Flash Exploit"},
               {"l%d+o%d+a%d+d%d+B%d+y%d+t%d+e%d+s",1,false,"Angler EK"},
-              {"iyokurnbdcdqik$","qbhtjytvwcu$","wfbkgksaqqjie$","dgxomfculljox$","yesfkpfxshqyu$","xocgbxgjzzb$","iukzblnpjqvx$","bkznfjksbcpp$",1,true,"Job314"},
+              {"%22%20%66%72%61%6D%65%62%6F%72%64%65%72%3D%22%30%22%20%68%65%69%67%68%74%3D%22%30%22%20%77%69%64%74%68%3D%22%30%22%20%3E%3C%2F%69%66%72%61%6D%65%3E%27%3B","I:\092__WRK\092BANNER_V3\092src;;Main.as",1,true,"SoakSoak"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
