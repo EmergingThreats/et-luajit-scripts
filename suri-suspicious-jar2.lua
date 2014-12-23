@@ -77,6 +77,7 @@ susp_class = {
               {"javafx/application/Preloader","javafx/stage/Stage","javafx/application/Application",3,true,"Java7u21 Click2play Bypass http://seclists.org/bugtraq/2013/Jul/41 ???",0}, 
               {"[cC][Mm][dD]\046[Ee][Xx][Ee]%s/[Cc]",1,false,"cmd.exe /c as seen in IceFog/SplinterRat",0},
               {"\092[Ss][Oo][Ff][Tt][Ww][Aa][Rr][Ee]\092[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\092[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\092[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\092[Rr][Uu][Nn]",1,false,"Access to windows Run key",0},
+              {"this url is error","xor","randGen","numbersAndLetters",4,true,"Operation Poisoned Helmand http://www.threatconnect.com/news/operation-poisoned-helmand/",0},
              }
 
 obfus_strings = {
