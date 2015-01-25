@@ -103,6 +103,7 @@ susp_class = {
               {"l%d+o%d+a%d+d%d+B%d+y%d+t%d+e%d+s",1,false,"Angler EK"},
               {"%22%20%66%72%61%6D%65%62%6F%72%64%65%72%3D%22%30%22%20%68%65%69%67%68%74%3D%22%30%22%20%77%69%64%74%68%3D%22%30%22%20%3E%3C%2F%69%66%72%61%6D%65%3E%27%3B","I:\092__WRK\092BANNER_V3\092src;;Main.as",1,true,"SoakSoak"},
               {"rF4gR7geU7d6t5LJfr8sb","write_Byte",2,true,"AnglerEK"},
+              {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000\001\014\093\092\002\085\116\079\120\087\053\088\041\084\011\119\008\255",1,true,"2015-0311 Exploit"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
@@ -249,7 +250,6 @@ function job314_check(a,verbose)
     local rtn = 0
     s,e,m,c1,c2,c3,c4 = string.find(a,"(_a[-_]+%W-%W_a[-_]+%W-_a[-_]+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W-[a-z]+%W)")
     if s ~= nil then
-         print(m)
          if string.len(c1) > 6 and string.len(c1) < 20 and string.len(c2) > 31 and string.len(c2) < 43 and string.len(c3) > 6 and string.len(c3) < 20 and string.len(c4) > 31 and string.len(c4) < 43 then
             if verbose == 1 then print("Found Job314") end
             rtn = 1
@@ -400,7 +400,8 @@ function common(t,o,verbose)
         if tagtype == 87 then
             binoffset = offset + 6
             local bindata = string.sub(t,offset + 6,offset + shortlen)
-            if verbose==1 then print("DefineBinary tag id " .. ((256*t:byte(offset+1)) + t:byte(offset)) .. " at " .. offset) end
+            local tagid = ((256*t:byte(offset+1)) + t:byte(offset))
+            if verbose==1 then print("DefineBinary tag id " .. tagid .. " at " .. offset) end
             if string.find(bindata,"defaultValue",0,true) ~= nil and string.find(bindata,"maxValue",0,true) ~= nil and string.find(bindata,"minValue",0,true) ~= nil then
                 local cs,ce =string.find(bindata,"\162\007\100\101\102\097\117\108\116\086\097\108\117\101\000")
                 if ce ~= nil then
@@ -412,7 +413,6 @@ function common(t,o,verbose)
                     end
                 end
             end
-            
             if string.sub(t,binoffset,binoffset+2) ~= "CWS" and bit.bxor(t:byte(binoffset),t:byte(binoffset+1)) == 20 and bit.bxor(t:byte(binoffset),t:byte(binoffset+2)) == 16 then
                 if verbose==1 then print("Found XORed Flash header 'CWS' in binary file") end
                 return 1
