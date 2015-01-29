@@ -49,7 +49,8 @@ Chris Wakelin
 susp_class = {
               {"shellcode",1,true,"shellcode mentioned"},
               {"FindRopGadgets",1,true,"FindRopGadgets Function Observed in FlashPack"},
-              {"0x9Rl5W59Rl5W59Rl5W59Rl5W5",1,true,"SWT/RIG 2014-0569 NOP with subs"}, 
+              {"0x9Rl5W59Rl5W59Rl5W59Rl5W5",1,true,"SWT/RIG 2014-0569 NOP with subs"},
+              {"E:\092CrackAndHack",1,true,"RIG FlashFile"}, 
               {"HeapSpary",1,true,"Elderwood name HeapSpary"},
               {"Flahs_Version",1,true,"Elderwood name Flahs_version"},
               {"payloadRc4Key","import exploit","exploitUrl",1,true,"Job314 EK"},
