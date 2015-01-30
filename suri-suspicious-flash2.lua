@@ -105,6 +105,7 @@ susp_class = {
               {"%22%20%66%72%61%6D%65%62%6F%72%64%65%72%3D%22%30%22%20%68%65%69%67%68%74%3D%22%30%22%20%77%69%64%74%68%3D%22%30%22%20%3E%3C%2F%69%66%72%61%6D%65%3E%27%3B","I:\092__WRK\092BANNER_V3\092src;;Main.as",1,true,"SoakSoak"},
               {"rF4gR7geU7d6t5LJfr8sb","write_Byte",2,true,"AnglerEK"},
               {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000","\003\000\000\000\000\000\CWS",2,true,"2015-0311 Exploit"},
+              {"%Wdat_str%W","%w%wlo%W","%Wad%W","%WBytes%W",4,false,"Nuclear EK Flash"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 
