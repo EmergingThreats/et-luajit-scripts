@@ -106,12 +106,12 @@ susp_class = {
               {"rF4gR7geU7d6t5LJfr8sb","write_Byte",2,true,"AnglerEK/HanJuan"},
               {"p0sition","wrxeByte","wrxeMultiByte",3,true,"HanJuanEK/Angler"},
               {"sfrdtb7rJ54gRF6gL7eU8",1,true,"HanJuan/Angler"},
+              {"\099\004\036\000\099\005\036\000\099\006\036\000\099\007\036\000\099\008\036\000\099\009\036\000\099\010\036\000\099\004","\099\004\045\001\099\005\045\001\099\006\045\001\099\007\045\001\099\008\045\001\099\009\045\001\099\010\036\000\099\004","\098\004\037\128\002","\036\001\197\037\255\001",3,true,"AnglerEK/HanJuan Feb 03"},
               {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000","\003\000\000\000\000\000\CWS",2,true,"2015-0311 Exploit"},
               {"%w%w%wlo%W","%Wad%W","%WBytes%W","charCodeAt",4,false,"Nuclear EK Flash"},
               {"7772697465556E73696","%Wparam%W","%Weters%W",3,false,"Fiesta EK Flash"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
-
 --[[
 susp_class_doabc = {
                     {"Spray",1,true,"Spray in actionscript"},
@@ -294,7 +294,12 @@ function common(t,o,verbose)
         if verbose==1 then print("Not a SWF file bailing" .. sig) end
         return 0
     end
-    --print(t)
+    --[[
+    print(t)
+    f=io.open("dump.txt","w+")
+    f:write(t)
+    f:close()
+    ]]--
     if job314_check(t,verbose) == 1 then
         if (verbose == 0) then
             return 1
