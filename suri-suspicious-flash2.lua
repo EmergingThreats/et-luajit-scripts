@@ -108,7 +108,7 @@ susp_class = {
               {"sfrdtb7rJ54gRF6gL7eU8",1,true,"HanJuan/Angler"},
               {"\099\004\036\000\099\005\036\000\099\006\036\000\099\007\036\000\099\008\036\000\099\009\036\000\099\010\036\000\099\004","\099\004\045\001\099\005\045\001\099\006\045\001\099\007\045\001\099\008\045\001\099\009\045\001\099\010\036\000\099\004","\098\004\037\128\002","\036\001\197\037\255\001",3,true,"AnglerEK/HanJuan Feb 03"},
               {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000","\003\000\000\000\000\000\CWS",2,true,"2015-0311 Exploit"},
-              {"%w%w%wlo%W","%Wad%W","%WBytes%W","charCodeAt",4,false,"Nuclear EK Flash"},
+              {"csvwfefdvwe","charCodeAt","Photo",3,true,"Nuclear EK Flash"},
               {"7772697465556E73696","%Wparam%W","%Weters%W",3,false,"Fiesta EK Flash"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
@@ -447,12 +447,12 @@ function common(t,o,verbose)
             -- Inspect Embeded Flash to a certian point. If nesting is to deep fire an event
             if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" then
                 if max_nesting_cnt < max_nesting_limit then
-                    if common(string.sub(t,offset + 6,offset + shortlen),4,verbose) == 1 then
-                        if verbose==1 then print("Found Evil in Embedded Flash File") end
-                        return 1
-                    else
-                        max_nesting_cnt = max_nesting_cnt + 1
-                    end
+                   if common(string.sub(t,offset + 6,offset + shortlen),4,verbose) == 1 then
+                       if verbose==1 then print("Found Evil in Embedded Flash File") end
+                       return 1
+                   else
+                       max_nesting_cnt = max_nesting_cnt + 1
+                   end
                 --[[else
                     if verbose==1 then print("We passed a Maximum Flash Nesting Count Limit of " .. max_nesting_limit) end
                     return 1]]--
