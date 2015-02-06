@@ -122,8 +122,8 @@ susp_class_doabc = {
 local lz = require 'zlib'
 local struct = require 'struct'
 local bit = require("bit")
-local max_nesting_cnt = 0
-local max_nesting_limit = 1
+nested_flash_cnt = 1 
+max_nesting_limit = 5 
 
 local core = require "ltn12ce.core"
 
@@ -321,7 +321,7 @@ function common(t,o,verbose)
     end
     --get number of bits in the rect
     local rectbits = bit.rshift(bit.band(string.byte(t,1),0xff),3)
-    offset = math.floor((7 + (rectbits*4) - 3) / 8) + 5 + 1
+    local offset = math.floor((7 + (rectbits*4) - 3) / 8) + 5 + 1
 
     --iterate over the tags---
     while offset + 1 < len do
@@ -335,13 +335,13 @@ function common(t,o,verbose)
         -- get tag bits --
         offset = offset + 2
         tagtype = bit.band(((bit.lshift(a,2)) + (bit.rshift(b,6))),0x03ff)
-        shortlen = bit.band(b,0x3f)
+        local shortlen = bit.band(b,0x3f)
         -- is this a long tag format?
         if shortlen == 0x3f then
             shortlen = struct.unpack("<I4",string.sub(t,offset,offset+4))
             offset = offset + 4
         end
-
+        
         if tagtype == 91 then
             ttfoffset = offset + 3
             -- Find the end of the font name
@@ -441,17 +441,19 @@ function common(t,o,verbose)
             end
                 
             -- Inspect Embeded Flash to a certian point. If nesting is to deep fire an event
-            if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" then
-                if max_nesting_cnt < max_nesting_limit then
+            if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" or string.sub(t,binoffset,binoffset+2) == "ZWS" then
+                if nested_flash_cnt < max_nesting_limit then
+                   if verbose==1 then print("Inspecting Nested Flash Count " .. nested_flash_cnt) end
                    if common(string.sub(t,offset + 6,offset + shortlen),4,verbose) == 1 then
                        if verbose==1 then print("Found Evil in Embedded Flash File") end
                        return 1
                    else
-                       max_nesting_cnt = max_nesting_cnt + 1
+                       nested_flash_cnt = nested_flash_cnt + 1
                    end
                 --[[else
                     if verbose==1 then print("We passed a Maximum Flash Nesting Count Limit of " .. max_nesting_limit) end
-                    return 1]]--
+                    return 1
+                --]]
                 end
             end 
         end
