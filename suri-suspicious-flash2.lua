@@ -106,7 +106,7 @@ susp_class = {
               {"rF4gR7geU7d6t5LJfr8sb","write_Byte",2,true,"AnglerEK/HanJuan"},
               {"p0sition","wrxeByte","wrxeMultiByte",3,true,"HanJuanEK/Angler"},
               {"sfrdtb7rJ54gRF6gL7eU8",1,true,"HanJuan/Angler"},
-              {"\099\004\036\000\099\005\036\000\099\006\036\000\099\007\036\000\099\008\036\000\099\009\036\000\099\010\036\000\099\004","\099\004\045\001\099\005\045\001\099\006\045\001\099\007\045\001\099\008\045\001\099\009\045\001\099\010\036\000\099\004","\098\004\037\128\002","\036\001\197\037\255\001",3,true,"AnglerEK/HanJuan Feb 03"},
+              {"\099\004\036\000\099\005\036\000\099\006\036\000\099\007\036\000\099\008\036\000\099\009\036\000\099\010\036\000\099\004","\099\004\045\001\099\005\045\001\099\006\045\001\099\007\045\001\099\008\045\001\099\009\045\001\099\010\036\000\099\004","\098\004\037\128\002",2,true,"AnglerEK/HanJuan Feb 03"},
               {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000","\003\000\000\000\000\000CWS",2,true,"2015-0311 Exploit"},
               {"csvwfefdvwe","charCodeAt","Photo",3,true,"Nuclear EK Flash"},
               {"7772697465556E73696","%Wparam%W","%Weters%W",3,false,"Fiesta EK Flash"},
@@ -233,7 +233,7 @@ function match_strings(a,match_set,verbose)
     local cnt=0
     local fnd
     
---    if verbose == 1 then print("Looking for " .. match_num .. " out of " .. num_strings .. " strings : " .. desc) end
+    --if verbose == 1 then print("Looking for " .. match_num .. " out of " .. num_strings .. " strings : " .. desc) end
     for n = 1, num_strings, 1 do
         m = match_set[n]
 --        if verbose == 1 then print("Looking for string " .. cnt .. " of " .. match_num .. " : " .. m) end
