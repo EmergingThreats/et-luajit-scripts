@@ -78,6 +78,7 @@ susp_class = {
               {"[cC][Mm][dD]\046[Ee][Xx][Ee]%s/[Cc]",1,false,"cmd.exe /c as seen in IceFog/SplinterRat",0},
               {"\092[Ss][Oo][Ff][Tt][Ww][Aa][Rr][Ee]\092[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\092[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\092[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\092[Rr][Uu][Nn]",1,false,"Access to windows Run key",0},
               {"this url is error","xor","randGen","numbersAndLetters",4,true,"Operation Poisoned Helmand http://www.threatconnect.com/news/operation-poisoned-helmand/",0},
+              {"FuddedByPORNCORE",1,true,"Unknown EK",0},
              }
 
 obfus_strings = {
