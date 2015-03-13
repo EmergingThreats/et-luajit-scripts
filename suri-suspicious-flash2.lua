@@ -80,6 +80,7 @@ susp_class = {
               {"rop_gadget","DoExploit","attacker_class_bin",1,true,"SWT/GrandSoft Exploit"},
               {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
               {"[Rr][Oo][Pp][_]-[Gg][Aa][Dd][Gg][Ee][Tt]",1,false,"RopGadget string found"},
+              {"[Ss][Hh][Ee][Ll][Ll]%W-[Cc][Oo][Dd][Ee]",1,false,"ShellCode string found"},
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
               {"Vector","\029\001\001\005OZZDLG[DCM[GE[@AZ\022\020\025\022DDD[\016\013\016uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\001\002",2,true,"VFW ASLR Bypass"},
@@ -110,6 +111,11 @@ susp_class = {
               {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000","\003\000\000\000\000\000CWS",2,true,"2015-0311 Exploit"},
               {"csvwfefdvwe","charCodeAt","Photo",3,true,"Nuclear EK Flash"},
               {"7772697465556E73696","%Wparam%W","%Weters%W",3,false,"Fiesta EK Flash"},
+              --{"[\092D](?","RegExp","|",3,true,"Possible CVE-2015-0323"},
+              --{"RegExp","#","䞅","*(?i)","(?x)",4,true,"Possible CVE-2015-0329"},
+              --{"RegExp","\092\001?c","%(%?70%)",3,false,"Possible CVE-2015-0318"},
+              {"[Kk][Ee][Rr][Nn][Ee][Ll]32",1,false,"Kernel32"},
+              {"VirtualProtect",1,true,"VirtualProtect"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
@@ -439,16 +445,23 @@ function common(t,o,verbose)
             if xor_bin_check(string.sub(t,offset + 6,offset + shortlen),verbose) == 1 then
                 return 1
             end
-                
+
+            -- seeing this in flashpack
+            if nested_flash_cnt > 1 then
+                if string.find(bindata,"doswf.com",0,true) ~= nil then
+                       if verbose==1 then print("Found DoSWF wrapped in normal flash observed in flashpack") end
+                       return 1
+                end
+            end
+               
             -- Inspect Embeded Flash to a certian point. If nesting is to deep fire an event
             if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" or string.sub(t,binoffset,binoffset+2) == "ZWS" then
                 if nested_flash_cnt < max_nesting_limit then
                    if verbose==1 then print("Inspecting Nested Flash Count " .. nested_flash_cnt) end
+                   nested_flash_cnt = nested_flash_cnt + 1
                    if common(string.sub(t,offset + 6,offset + shortlen),4,verbose) == 1 then
                        if verbose==1 then print("Found Evil in Embedded Flash File") end
                        return 1
-                   else
-                       nested_flash_cnt = nested_flash_cnt + 1
                    end
                 --[[else
                     if verbose==1 then print("We passed a Maximum Flash Nesting Count Limit of " .. max_nesting_limit) end
