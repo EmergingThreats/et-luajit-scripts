@@ -124,7 +124,6 @@ susp_class_doabc = {
                     {"vuln",1,true,"vuln in actionscript"}
                    }
 --]]
-
 local lz = require 'zlib'
 local struct = require 'struct'
 local bit = require("bit")
@@ -259,9 +258,9 @@ end
 
 function job314_check(a,verbose)
     local rtn = 0
-    s,e,m,c1,c2,c3,c4 = string.find(a,"(_a[-_]+%W-%W_a[-_]+%W-_a[-_]+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W+([a-z]+)\036([a-f0-9]+)\045-%d+%W-[a-z]+%W)")
+    s,e,m,c1,c2,c3,c4 = string.find(a,"(_a[-_]+%W-%W_a[-_]+%W-_a[-_]+%W+([a-z]+)\036([a-f0-9]+)\045?%d*%W+([a-z]+)\036([a-f0-9]+)\045?%d*%W)")
     if s ~= nil then
-         if string.len(c1) > 6 and string.len(c1) < 20 and string.len(c2) > 31 and string.len(c2) < 43 and string.len(c3) > 6 and string.len(c3) < 20 and string.len(c4) > 31 and string.len(c4) < 43 then
+         if string.len(c1) < 20 and string.len(c2) > 31 and string.len(c2) < 43 and string.len(c3) < 20 and string.len(c4) > 31 and string.len(c4) < 43 then
             if verbose == 1 then print("Found Job314") end
             rtn = 1
          end
