@@ -80,7 +80,7 @@ susp_class = {
               {"rop_gadget","DoExploit","attacker_class_bin",1,true,"SWT/GrandSoft Exploit"},
               {"[hH][eE][aA][pP][sS][Pp][Rr][Aa][Yy]",1,false,"Unknown heapspray string found"},
               {"[Rr][Oo][Pp][_]-[Gg][Aa][Dd][Gg][Ee][Tt]",1,false,"RopGadget string found"},
-              {"[Ss][Hh][Ee][Ll][Ll]%W-[Cc][Oo][Dd][Ee]",1,false,"ShellCode string found"},
+              {"[Ss][Hh][Ee][Ll][Ll]%W?[Cc][Oo][Dd][Ee]",1,false,"ShellCode string found"},
               {"makePayloadWin",1,true,"Possible 2014-0497 https://www.securelist.com/en/blog/8177/CVE_2014_0497_a_0_day_vulnerability"},
               {"counterswfcookie","{addDiv('<iframe src=","{return document.cookie;}","window.navigator.userAgent",4,true,"Fiesta Redirect"},
               {"Vector","\029\001\001\005OZZDLG[DCM[GE[@AZ\022\020\025\022DDD[\016\013\016uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu0000000000000000000000\001\002",2,true,"VFW ASLR Bypass"},
