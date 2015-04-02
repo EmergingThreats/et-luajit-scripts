@@ -411,6 +411,15 @@ function common(t,o,verbose)
                     return 1                        
                 end
             end
+            if string.find(DoABC,"charCodeAt",0,true) ~= nil and string.find(DoABC,"writeByte",0,true) ~= nil then
+                s,e,xor_var = string.find(DoABC,"\208\048\036%z\099(.)")
+                xor_func = "\043\098" .. xor_var .. "\065\001\170\065\001\041\194" .. xor_var
+                s1,e1,m1 = string.find(DoABC,xor_func,0,true)
+                if s1 ~= nil then
+                    if verbose==1 then print("Found Nuclear EK XOR Func") end
+                        return 1
+                end
+            end
         end
         if tagtype == 87 then
             binoffset = offset + 6
