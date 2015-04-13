@@ -116,6 +116,7 @@ susp_class = {
               --{"RegExp","\092\001?c","%(%?70%)",3,false,"Possible CVE-2015-0318"},
               {"[Kk][Ee][Rr][Nn][Ee][Ll]32",1,false,"Kernel32"},
               {"VirtualProtect",1,true,"VirtualProtect"},
+              {"\209\098\005\098\004\164..\170","%Wkey%W","%Wsrc%W",3,false,"Neutrino SWF"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
