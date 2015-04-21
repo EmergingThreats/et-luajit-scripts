@@ -421,6 +421,10 @@ function common(t,o,verbose)
                         return 1
                 end
             end
+            if string.find(DoABC,"\098\002\036\001\160\116\099\002\002\098\002\072\008\002",0,true) ~= nil and string.find(DoABC,"\036\000\099\003\036\000\099\003\009\098\003\037\255\001\173") and string.find(DoABC,"\098\002\036\091\173\018\017",0,true) ~= nil then
+                if verbose==1 then print("Found Angler EK") end
+                return 1
+            end
         end
         if tagtype == 87 then
             binoffset = offset + 6
