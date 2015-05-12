@@ -111,12 +111,13 @@ susp_class = {
               {"\007\000\000\000\000\000\055\098\128\147\215\021\006\000\000\000\000\000","\003\000\000\000\000\000CWS",2,true,"2015-0311 Exploit"},
               {"csvwfefdvwe","charCodeAt","Photo",3,true,"Nuclear EK Flash"},
               {"7772697465556E73696","%Wparam%W","%Weters%W",3,false,"Fiesta EK Flash"},
+              {"\208\048\209\210..\116\042..\004\211\170\116\042..\005\072",1,false,"Fiesta EK Flash"},
               --{"[\092D](?","RegExp","|",3,true,"Possible CVE-2015-0323"},
               --{"RegExp","#","䞅","*(?i)","(?x)",4,true,"Possible CVE-2015-0329"},
               --{"RegExp","\092\001?c","%(%?70%)",3,false,"Possible CVE-2015-0318"},
               {"[Kk][Ee][Rr][Nn][Ee][Ll]32",1,false,"Kernel32"},
               {"VirtualProtect",1,true,"VirtualProtect"},
-              {"\209\098\005\098\004\164..\170","%Wkey%W","%Wsrc%W",3,false,"Neutrino SWF"}
+              {"\209\098[\004\005]\098[\004\005]\164..\170","%Wkey%W","%Wsrc%W",3,false,"Neutrino SWF"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
@@ -243,10 +244,10 @@ function match_strings(a,match_set,verbose)
     for n = 1, num_strings, 1 do
         m = match_set[n]
 --        if verbose == 1 then print("Looking for string " .. cnt .. " of " .. match_num .. " : " .. m) end
-        fnd = string.find(a,m,1,plain)
-        if fnd then
+        s,e = string.find(a,m,1,plain)
+        if s then
             cnt = cnt + 1
---            if verbose == 1 then print("Found string " .. cnt .. " of " .. match_num .. " : " .. m) end
+--            if verbose == 1 then print("Found string " .. cnt .. " of " .. match_num .. " : " .. m .. ":" .. HexDumpString(string.sub(a,s,e))) end
             if cnt == match_num then
                 if verbose == 1 then print("Found " .. desc) end
                 rtn = 1
