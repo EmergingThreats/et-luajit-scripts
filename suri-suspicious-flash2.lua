@@ -117,7 +117,7 @@ susp_class = {
               --{"RegExp","\092\001?c","%(%?70%)",3,false,"Possible CVE-2015-0318"},
               {"[Kk][Ee][Rr][Nn][Ee][Ll]32",1,false,"Kernel32"},
               {"VirtualProtect",1,true,"VirtualProtect"},
-              {"\209\098[\004\005]\098[\004\005]\164..\170","%Wkey%W","%Wsrc%W",3,false,"Neutrino SWF"},
+              {"\209\098[\004\005]\098[\004\005]\164..\170","%Wkey%W",2,false,"Neutrino SWF"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
@@ -413,7 +413,7 @@ function common(t,o,verbose)
                     return 1                        
                 end
             end
-            if string.find(DoABC,"charCodeAt",0,true) ~= nil and string.find(DoABC,"writeByte",0,true) ~= nil then
+            if string.find(DoABC,"key",0,true) ~= nil then
                 s,e,xor_var = string.find(DoABC,"\208\048\036%z\099(.)")
                 xor_func = "\043\098" .. xor_var .. "\065\001\170\065\001\041\194" .. xor_var
                 s1,e1,m1 = string.find(DoABC,xor_func,0,true)
