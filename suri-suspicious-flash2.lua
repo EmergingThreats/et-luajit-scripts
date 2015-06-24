@@ -119,6 +119,7 @@ susp_class = {
               {"VirtualProtect",1,true,"VirtualProtect"},
               {"\209\098[\004\005]\098[\004\005]\164..\170","%Wkey%W",2,false,"Neutrino SWF"},
               {"InitEncoreChar","loadBytes","URLLoader","%WWldT[A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/]","%Wv%?%W",5,false,"HanJuan"},
+              {"m_data","m_key","hexToIntArray","decode","loadBytes","binToIntArray",6,false,"Targeted 2015-0313 Encoder"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
