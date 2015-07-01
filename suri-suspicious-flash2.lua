@@ -118,9 +118,11 @@ susp_class = {
               {"[Kk][Ee][Rr][Nn][Ee][Ll]32",1,false,"Kernel32"},
               {"VirtualProtect",1,true,"VirtualProtect"},
               {"\209\098[\004\005]\098[\004\005]\164..\170","%Wkey%W",2,false,"Neutrino SWF"},
+              {"\003key%W","\003rc4\%W","\002st%W","\004evnt%W",4,false,"Neutrino SWF"},
               {"InitEncoreChar","loadBytes","URLLoader","%WWldT[A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/]","%Wv%?%W",5,false,"HanJuan"},
               {"m_data","m_key","hexToIntArray","decode","loadBytes","binToIntArray",6,false,"Targeted 2015-0313 Encoder"},
               {"do_rop_","Exploiter","spray_objects","corrupt_byte_array",1,false,"Metasploit Exploiter"},
+              {"loadBytes","\094\092\092\115\043\124\092\092\115\043\036","\115\036\024\165\160\115","\0020x%W","\036\002\163",4, false,"NullHole Jul 01"},
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
@@ -416,15 +418,29 @@ function common(t,o,verbose)
                     return 1                        
                 end
             end
-            if string.find(DoABC,"key",0,true) ~= nil then
+            if string.find(DoABC,"\003key",0,true) ~= nil then
                 s,e,xor_var = string.find(DoABC,"\208\048\036%z\099(.)")
-                xor_func = "\043\098" .. xor_var .. "\065\001\170\065\001\041\194" .. xor_var
-                s1,e1,m1 = string.find(DoABC,xor_func,0,true)
-                if s1 ~= nil then
-                    if verbose==1 then print("Found Nuclear EK XOR Func") end
+                if xor_var ~= nil then 
+                    xor_func = "\043\098" .. xor_var .. "\065\001\170\065\001\041\194" .. xor_var
+                    s1,e1,m1 = string.find(DoABC,xor_func,0,true)
+                    if s1 ~= nil then
+                        if verbose==1 then print("Found Nuclear EK XOR Func") end
                         return 1
+                    end
+                end
+                if string.find(DoABC,"\001b",0,true) ~= nil then
+                    s1,e1,xor_var2 = string.find(DoABC,"(.)\065\001\170\065\001",0,false)
+                    if xor_var2 ~= nil then
+                        xor_func = xor_var2 .. "\065\001\170\065\001\041\194\003" .. xor_var2
+                        s1,e1,m1 = string.find(DoABC,xor_func,0,true)
+                        if s1 ~= nil then
+                            if verbose==1 then print("Found Nuclear EK XOR Func") end
+                            return 1
+                        end
+                    end
                 end
             end
+
             if string.find(DoABC,"\098\002\036\001\160\116\099\002\002\098\002\072\008\002",0,true) ~= nil and string.find(DoABC,"\036\000\099\003\036\000\099\003\009\098\003\037\255\001\173",0,true) ~= nil and string.find(DoABC,"\098\002\036\091",0,true) ~=nil then
                 if verbose==1 then print("Found Angler EK") end
                 return 1
