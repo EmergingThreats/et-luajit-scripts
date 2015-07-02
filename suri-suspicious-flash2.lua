@@ -474,6 +474,10 @@ function common(t,o,verbose)
                 if verbose==1 then print("Found XORed Flash header 'FWS' in binary file") end
                 return 1
             end
+            if string.sub(t,binoffset,binoffset+2) ~= "FLV" and bit.bxor(t:byte(binoffset),t:byte(binoffset+1)) == 10 and bit.bxor(t:byte(binoffset),t:byte(binoffset+2)) == 16 then
+                if verbose==1 then print("Found XORed Flash video header 'FLV' in binary file") end
+                return 1
+            end
             -- Look for Embedded XOR bins
             if xor_bin_check(string.sub(t,offset + 6,offset + shortlen),verbose) == 1 then
                 return 1
