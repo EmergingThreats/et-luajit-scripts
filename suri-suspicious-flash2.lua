@@ -274,6 +274,34 @@ function job314_check(a,verbose)
     end
     return rtn
 end
+
+function check_2015_3113(t,verbose)
+    local len = string.len(t)
+    local offset = struct.unpack(">I4",string.sub(t,6,9))
+    offset = offset + 4
+    local tag_type
+    local tmp_sound
+    local soundformat
+    local soundsize
+    while offset + 1 < len do
+        tag_type = string.byte(t,offset+1)
+        tag_size = struct.unpack(">I3",string.sub(t,offset+2,offset+4))
+        if tag_type == 8 then
+            tmp_sound = string.byte(t,offset+12)
+            soundformat = bit.rshift(bit.band(tmp_sound,240),4)
+            soundsize = bit.rshift(bit.band(tmp_sound,2),1)
+            if (soundformat == 4 or soundformat == 5 or soundformat == 6) and
+                soundsize == 0 and tag_size > 1024 then
+                if verbose == 1 then print("Found possible CVE-2015-3113 in Embeded FLV") end
+                    return 1
+            end
+        end
+        offset = offset + tag_size + 15
+    end
+    if verbose == 1 then print("Did not find anything suspicious...") end
+    return 0
+end
+
     
 function common(t,o,verbose)
     -- Method should work for Flash inside of OLE etc.
@@ -481,6 +509,13 @@ function common(t,o,verbose)
             -- Look for Embedded XOR bins
             if xor_bin_check(string.sub(t,offset + 6,offset + shortlen),verbose) == 1 then
                 return 1
+            end
+
+            -- Look for CVE-2015-3113
+            if string.sub(t,binoffset,binoffset+2) == "FLV" then
+                if check_2015_3113(string.sub(t,offset + 6,offset + shortlen),verbose) == 1 then
+                    return 1
+                end
             end
 
             -- seeing this in flashpack
