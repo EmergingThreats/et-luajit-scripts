@@ -124,6 +124,11 @@ susp_class = {
               {"do_rop_","Exploiter","spray_objects","corrupt_byte_array",1,false,"Metasploit Exploiter"},
               {"loadBytes","\094\092\092\115\043\124\092\092\115\043\036","\115\036\024\165\160\115","\0020x%W","\036\002\163",4, false,"NullHole Jul 01"},
               {"\010charCodeAt","\009loadBytes","\003key","\208\048\036%z","\065\001\170\065\001\041\194\003",5,false,"Nuclear Jul 06"},
+              {"\003key","\170\065\001\041","\209\209\160\133\213","\032[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]",4,false,"Nuclear Jul 08"},
+              {"\010ShellMac64","\010ShellWin64","\010ShellWin32",1,true,"HT POC 1"},
+              {"\006CallVP","\006FindVP","\007Payload",3,true,"HT POC 2 Windows"},
+              {"\006CallMP","\006FindMP","\007Payload",3,true,"HT POC 3 MAC"},
+              {"\010HT_exploit",1,true,"HT Scary APT Rip http://www.volexity.com/blog/?p=158"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
