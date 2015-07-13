@@ -118,7 +118,7 @@ susp_class = {
               {"[Kk][Ee][Rr][Nn][Ee][Ll]32",1,false,"Kernel32"},
               {"[Vv][Ii][Rr][Tt][Uu][Aa][Ll][Pp][Rr][Oo][Tt][Ee][Cc][Tt]",1,false,"VirtualProtect"},
               {"\209\098[\004\005]\098[\004\005]\164..\170","%Wkey%W",2,false,"Neutrino SWF"},
-              {"\003key%W","\003rc4%W","[\002\003]str?%W","\004evnt%W",4,false,"Neutrino SWF"},
+              {"\003key%W","\003rc4%W","[\002\003]str?%W","\004evnt%W","\003buf%W",4,false,"Neutrino SWF"},
               {"\003key%W","\003buf%W","\005rtCfg","loadBytes",4,false,"Neutrino SWF"},
               {"InitEncoreChar","loadBytes","URLLoader","%WWldT[A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/][A-Za-z0-9%+%/]","%Wv%?%W",5,false,"HanJuan"},
               {"m_data","m_key","hexToIntArray","decode","loadBytes","binToIntArray",6,false,"Targeted 2015-0313 Encoder"},
