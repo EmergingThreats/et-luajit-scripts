@@ -1,0 +1,37 @@
+#*************************************************************
+#  Copyright (c) 2003-2015, Emerging Threats
+#  All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
+#  following conditions are met:
+#  
+#  * Redistributions of source code must retain the above copyright notice, this list of conditions and the following 
+#    disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the 
+#    following disclaimer in the documentation and/or other materials provided with the distribution.
+#  * Neither the name of the nor the names of its contributors may be used to endorse or promote products derived 
+#    from this software without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+#  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+#
+#*************************************************************
+#
+# These are experimental rules using a combination of Lua and the "xbits" feature included in Suricata 2.1beta and later
+#
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL Flash file download (CWS)"; flow:established,from_server; file_data; content:"CWS"; within:3; xbits:set,ET.pluginfile,track ip_pair, expire 120; flowbits:noalert; classtype:bad-unknown; sid:380000001; rev:1;)
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL Flash file download (ZWS)"; flow:established,from_server; file_data; content:"ZWS"; within:3; xbits:set,ET.pluginfile,track ip_pair, expire 120; flowbits:noalert; classtype:bad-unknown; sid:380000002; rev:1;)
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL Possible SilverLight file download"; flow:established,from_server; file_data; content:"PK"; within:2; content:"AppManifest.xaml"; nocase; xbits:set,ET.pluginfile,track ip_pair, expire 120; flowbits:noalert; classtype:bad-unknown; sid:380000003; rev:1;)
+#
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET EXPERIMENTAL download with minimal headers after plugin file download (1)"; flow:to_server,established; content:!"Referer|3a|"; http_header; content:!"Accept|3a|"; http_header; xbits:isset,ET.pluginfile,track ip_pair; classtype:bad-unknown; sid:380000010; rev:1;)
+alert http $HOME_NET any -> $EXTERNAL_NET any (msg:"ET EXPERIMENTAL download with minimal headers after plugin file download (2)"; flow:to_server,established; content:!"User-Agent|3a|"; http_header; content:!"Referer|3a|"; http_header; xbits:isset,ET.pluginfile,track ip_pair; classtype:bad-unknown; sid:380000011; rev:1;)
+#
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL (data) download with high entropy after plugin file download"; flow:from_server,established; filesize:>10240; filemagic:"data"; filemagic:!" data"; xbits:isset,ET.pluginfile,track ip_pair; luajit:suri-high-entropy.lua; classtype:bad-unknown; sid:380000015; rev:1;)
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL (data) download with high entropy from dotted-quad host"; flow:from_server,established; filesize:>10240; filemagic:"data"; filemagic:!" data"; flowbits:isset,http.dottedquadhost; luajit:suri-high-entropy.lua; classtype:bad-unknown; sid:380000016; rev:1;)
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL XORed binary after plugin file download"; flow:from_server,established; file_data; content:!"MZ"; within:2; xbits:isset,ET.pluginfile,track ip_pair; luajit:suri-xor-binary-quick.lua; classtype:bad-unknown; sid:380000017; rev:1;)
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"ET EXPERIMENTAL PE EXE or DLL binary after plugin file download"; flow:from_server,established; flowbits:isset,ET.http.binary; xbits:isset,ET.pluginfile,track ip_pair; classtype:bad-unknown; sid:380000018; rev:1;)
