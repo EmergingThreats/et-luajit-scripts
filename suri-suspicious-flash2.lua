@@ -129,7 +129,8 @@ susp_class = {
               {"\010ShellMac64","\010ShellWin64","\010ShellWin32",1,true,"HT POC 1"},
               {"\006CallVP","\006FindVP","\007Payload",3,true,"HT POC 2 Windows"},
               {"\006CallMP","\006FindMP","\007Payload",3,true,"HT POC 3 MAC"},
-              {"\010HT_exploit",1,true,"HT Scary APT Rip http://www.volexity.com/blog/?p=158"}
+              {"\010HT_exploit",1,true,"HT Scary APT Rip http://www.volexity.com/blog/?p=158"},
+              {"flash.display.Loader","com.sociodox.utils:Base64","flash.xml",3,true,"Spartan EK XML/Base64 loader"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
