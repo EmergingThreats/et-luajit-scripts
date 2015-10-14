@@ -130,7 +130,8 @@ susp_class = {
               {"\006CallVP","\006FindVP","\007Payload",3,true,"HT POC 2 Windows"},
               {"\006CallMP","\006FindMP","\007Payload",3,true,"HT POC 3 MAC"},
               {"\010HT_exploit",1,true,"HT Scary APT Rip http://www.volexity.com/blog/?p=158"},
-              {"flash.display.Loader","com.sociodox.utils:Base64","flash.xml",3,true,"Spartan EK XML/Base64 loader"}
+              {"flash.display.Loader","com.sociodox.utils:Base64","flash.xml",3,true,"Spartan EK XML/Base64 loader"},
+              {"B[%u%c]+y[%u%c]-t[%u%c]-e[%u%c]-A[%u%c]-r[%u%c]-r[%u%c]-a[%u%c]-y","B[%u%c]-y[%u%c]+t[%u%c]-e[%u%c]-A[%u%c]-r[%u%c]-r[%u%c]-a[%u%c]-y",1,false,"Obfuscated ByteArray string used in Nuclear"}
               --{"_doswf_package",1, true,"DoSWF encoded Flash File http://www.kahusecurity.com/2013/deobfuscating-the-ck-exploit-kit"},
              }
 --[[
@@ -302,7 +303,7 @@ function check_2015_3113(t,verbose)
             soundsize = bit.rshift(bit.band(tmp_sound,2),1)
             if (soundformat == 4 or soundformat == 5 or soundformat == 6) and
                 soundsize == 0 and tag_size > 1024 then
-                if verbose == 1 then print("Found possible CVE-2015-3113 in Embeded FLV") end
+                if verbose == 1 then print("Found possible CVE-2015-3113 in Embedded FLV") end
                     return 1
             end
         end
@@ -545,7 +546,7 @@ function common(t,o,verbose)
                 end
             end
                
-            -- Inspect Embeded Flash to a certian point. If nesting is to deep fire an event
+            -- Inspect Embedded Flash to a certain point. If nesting is to deep fire an event
             if string.sub(t,binoffset,binoffset+2) == "CWS" or string.sub(t,binoffset,binoffset+2) == "FWS" or string.sub(t,binoffset,binoffset+2) == "ZWS" then
                 if nested_flash_cnt < max_nesting_limit then
                    if verbose==1 then print("Inspecting Nested Flash Count " .. nested_flash_cnt) end
