@@ -23,8 +23,6 @@
 #
 #*************************************************************
 
-Detect modified XOR-ed payloads downloaded by "Xbagging" malicious MS Office macros
-
 This lua script can be run standalone and verbosely on a binary file with
 echo "run()" | lua -i <script name> <binary file>
 
@@ -47,19 +45,19 @@ function common(a,verbose)
         return 0
     end
 
--- Usually bytes 0x30 to 0x3b are 0-padding,
+-- Usually bytes 0x28 to 0x3b are 0-padding,
 -- so may actually contain the Key; decode PE offset at 0x3c and check
 -- it points to bytes that then decode to PE|00 00|
 -- 7,8,9,10,11,12 also cover their divisors 1 - 6, but include 4 four safety
 
-    key_lengths = {4,5,6,7,8,9,10,11,12}
+    key_lengths = {4,5,6,7,8,9,10,11,12,13,14,15,16}
 
     for n, l in pairs(key_lengths) do
 
-        koffset = ((l-(0x30 % l)) % l)
+        koffset = ((l-(0x28 % l)) % l)
 
         for i = 0, l-1, 1 do
-           key[i+1] = bit.bxor(a:byte(0x30+1+((i+koffset) % l)),(0x30+((i+koffset) % l)))
+           key[i+1] = bit.bxor(a:byte(0x28+1+((i+koffset) % l)),(0x28+((i+koffset) % l)))
         end
         
 
