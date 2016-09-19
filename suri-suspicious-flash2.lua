@@ -326,6 +326,11 @@ function common(t,o,verbose)
     local sig = string.sub(t,1, 3)
     local ver = string.byte(t,4)
     local len = struct.unpack("<I4",string.sub(t,5,8))
+    print(sig)
+    print(ver)
+    print(len)
+    local tag_table ={}
+    local last_tag_type = nil  
     --subtract sig,ver,len
     local parsed_len = (len - 8)
     -- store uncompressed length
@@ -382,7 +387,12 @@ function common(t,o,verbose)
         a = string.byte(t,offset + 1)
         -- Out of bytes
         if a == nil or b == nil then 
-           if verbose==1 then print("out of bytes") end
+           if verbose==1 then
+               print("out of bytes") 
+               for ttype,tcnt in pairs(tag_table) do
+                   print ("tagtype:" .. ttype .. " tagcnt:" .. tcnt)
+               end
+           end    
            return 0
         end
         -- get tag bits --
@@ -394,7 +404,12 @@ function common(t,o,verbose)
             shortlen = struct.unpack("<I4",string.sub(t,offset,offset+4))
             offset = offset + 4
         end
-        
+        print("tagtype:" .. tagtype .. "len:" .. shortlen)
+        if tag_table[tagtype] == nil then
+            tag_table[tagtype] = 1
+        else
+            tag_table[tagtype] = tag_table[tagtype] + 1
+        end
         if tagtype == 91 then
             ttfoffset = offset + 3
             -- Find the end of the font name
@@ -433,6 +448,25 @@ function common(t,o,verbose)
         end
         ]]--
         --DoABC tag
+        if tagtype == 61 then
+            dlen = struct.unpack(">I2",(string.sub(t,offset + 8, offset + 9)))
+            if dlen ~= nil and dlen - 9 > shortlen then
+                if verbose==1 then print("Possible CVE-2016-4274 taglen:" .. shortlen .. " datalen:" .. dlen) end
+                return 1                
+            end
+        end
+        if tagtype == 26 then
+            string.sub(t,offset, offset + shortlen)
+            dlen = struct.unpack(">I2",(string.sub(t,offset + 8, offset + 9)))
+            if dlen ~= nil and dlen - 9 > shortlen then
+                if verbose==1 then print("Possible CVE-2016-4274 taglen:" .. shortlen .. " datalen:" .. dlen) end
+                return 1
+            end
+        end        
+        if tagtype >= 100 and shortlen == 2 then
+            if verbose==1 then print("Tag type Greater than 100 Undefined/Unknown TAG Type and Tag DataLen = 0:" .. tagtype .. " len:" .. shortlen - 2) end
+            return 1
+        end
         if tagtype == 82 then
             DoABC = string.sub(t,offset, offset + shortlen)
             s,e = string.find(DoABC,"RegExp",0,true)
@@ -569,7 +603,8 @@ function common(t,o,verbose)
             print("tagtype:"..tagtype)
             print(string.sub(t,offset, offset + shortlen))
         end--]]
-        offset = offset + shortlen  
+        offset = offset + shortlen
+        last_tag_type = tagtype 
     end
     return 0
 end
